@@ -1,0 +1,845 @@
+/* ===========================================================================
+   METRO QUEST — 主版型（三欄 / 兩欄 / 單欄 + Bottom Sheet）
+   =========================================================================== */
+
+.mq-dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background:
+    linear-gradient(180deg, #070a24 0%, var(--mq-bg-deep) 30%, var(--mq-bg-night) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------- Top HUD ---------- */
+.mq-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 14px;
+  border-bottom: 3px solid var(--mq-border-dark);
+  background: linear-gradient(180deg, var(--mq-panel-2), var(--mq-panel));
+  z-index: 10;
+  flex: 0 0 auto;
+}
+
+.mq-header__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mq-header__title {
+  font-family: var(--mq-font-en);
+  font-size: 16px;
+  color: var(--mq-accent);
+  text-shadow: 3px 3px 0 #06323a, 0 0 10px rgba(78, 246, 255, 0.35);
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.mq-header__subtitle {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--mq-text-dim);
+  margin: 0;
+}
+
+.mq-header__right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.mq-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.mq-clock__time {
+  font-family: var(--mq-font-en);
+  font-size: 15px;
+  color: var(--mq-yellow);
+}
+
+.mq-clock__date {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  color: var(--mq-text-dim);
+}
+
+.mq-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  color: var(--mq-green);
+  border: 2px solid #1d5c38;
+  background: rgba(10, 40, 24, 0.7);
+  padding: 5px 7px;
+}
+
+.mq-live__dot {
+  width: 8px;
+  height: 8px;
+  background: var(--mq-green);
+  animation: mq-blink 1.2s steps(2) infinite;
+}
+
+@keyframes mq-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.25; }
+}
+
+.mq-mode-tag {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 5px 7px;
+  border: 2px solid var(--mq-orange);
+  color: var(--mq-orange);
+}
+
+.mq-mode-tag--live {
+  border-color: var(--mq-green);
+  color: var(--mq-green);
+}
+
+/* ---------- Main 三欄 ---------- */
+.mq-main {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr) 310px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.mq-panel-col {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(16, 26, 69, 0.72);
+  border-right: 3px solid var(--mq-border-dark);
+  overflow: hidden;
+}
+
+.mq-panel-col--right {
+  border-right: none;
+  border-left: 3px solid var(--mq-border-dark);
+}
+
+.mq-panel-col__title {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 10px 12px;
+  color: var(--mq-accent);
+  border-bottom: 2px solid var(--mq-border-dark);
+  background: rgba(26, 35, 80, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+}
+
+.mq-panel-col__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ---------- 中央地圖 ---------- */
+.mq-map-wrap {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, #0d1238 0%, #131b4d 45%, #1a2258 78%, #0f2a3c 100%);
+}
+
+.mq-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.mq-map.dragging {
+  cursor: grabbing;
+}
+
+.mq-map__hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  color: var(--mq-text-dim);
+  background: rgba(7, 9, 31, 0.72);
+  border: 2px solid var(--mq-border-dark);
+  padding: 6px 8px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.mq-map__toolbar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 6;
+}
+
+.mq-map__zoom-btn {
+  width: 30px;
+  height: 30px;
+  font-family: var(--mq-font-en);
+  font-size: 14px;
+  color: var(--mq-text);
+  background: var(--mq-panel-2);
+  border: 2px solid var(--mq-border);
+  cursor: pointer;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.mq-map__zoom-btn:active {
+  transform: translate(1px, 1px);
+}
+
+/* ---------- 車站 / 路線 SVG ---------- */
+.mq-station {
+  cursor: pointer;
+}
+
+.mq-station__marker {
+  fill: #ffffff;
+  stroke: var(--mq-border-dark);
+  stroke-width: 2;
+}
+
+.mq-station__marker--transfer {
+  fill: var(--mq-yellow);
+}
+
+.mq-station__marker--terminal {
+  fill: var(--mq-red);
+}
+
+.mq-station:hover .mq-station__marker {
+  fill: var(--mq-accent);
+}
+
+.mq-station__label {
+  font-family: var(--mq-font-zh);
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--mq-text);
+  paint-order: stroke;
+  stroke: #0b1035;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+.mq-station__label--en {
+  font-family: var(--mq-font-en);
+  font-size: 7px;
+  fill: var(--mq-text-dim);
+  font-weight: 400;
+}
+
+.mq-route-path {
+  fill: none;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+.mq-route-shadow {
+  stroke: rgba(0, 0, 0, 0.5);
+  stroke-width: 11;
+}
+
+.mq-route-glow {
+  stroke-width: 10;
+  opacity: 0.18;
+}
+
+.mq-route-core {
+  stroke-width: 6;
+}
+
+.mq-route--dimmed .mq-route-shadow,
+.mq-route--dimmed .mq-route-glow,
+.mq-route--dimmed .mq-route-core {
+  opacity: 0.22;
+}
+
+.mq-route--selected .mq-route-glow {
+  opacity: 0.5;
+}
+
+/* ---------- Pixel Train ---------- */
+.mq-train {
+  cursor: pointer;
+}
+
+.mq-train__hit {
+  fill: transparent;
+}
+
+.mq-train__body {
+  fill: #f2f4ff;
+  stroke: #0a0e26;
+  stroke-width: 1.5;
+}
+
+.mq-train__stripe {
+  stroke-width: 3;
+}
+
+.mq-train__window {
+  fill: #9be7ff;
+  stroke: #0a0e26;
+  stroke-width: 1;
+}
+
+.mq-train__light {
+  fill: #fff6b8;
+}
+
+.mq-train--selected .mq-train__body {
+  animation: mq-blink 0.7s steps(2) infinite;
+}
+
+.mq-train--delay .mq-train__stripe {
+  stroke: #ff5d73;
+}
+
+/* ---------- 系統狀態列 ---------- */
+.mq-statusbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 14px;
+  border-top: 3px solid var(--mq-border-dark);
+  background: linear-gradient(180deg, var(--mq-panel), #121a42);
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+}
+
+.mq-statusbar__label {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--mq-text-dim);
+}
+
+.mq-statusbar__stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  color: var(--mq-text);
+}
+
+.mq-statusbar__stat .dot {
+  width: 9px;
+  height: 9px;
+  border: 1px solid #000;
+}
+
+.dot--green { background: var(--mq-green); }
+.dot--yellow { background: var(--mq-yellow); }
+.dot--red { background: var(--mq-red); }
+
+.mq-statusbar__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---------- 左側 Route Panel ---------- */
+.mq-route-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 2px solid var(--mq-border-dark);
+  background: rgba(26, 35, 80, 0.85);
+  cursor: pointer;
+  transition: background 100ms steps(1), transform 80ms;
+}
+
+.mq-route-item:hover {
+  background: var(--mq-panel-3);
+}
+
+.mq-route-item--active {
+  background: rgba(45, 58, 125, 0.9);
+  box-shadow: inset 0 0 0 2px var(--mq-accent);
+}
+
+.mq-route-item__swatch {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  border: 2px solid #0a0e26;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+.mq-route-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.mq-route-item__name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--mq-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mq-route-item__name--en {
+  font-family: var(--mq-font-en);
+  font-size: 7px;
+  color: var(--mq-text-dim);
+}
+
+.mq-route-item__meta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.mq-status-badge {
+  font-family: var(--mq-font-en);
+  font-size: 7px;
+  padding: 2px 5px;
+  border: 1px solid #0a0e26;
+  letter-spacing: 0.5px;
+}
+
+.mq-status-badge--normal { background: #155e33; color: var(--mq-green); }
+.mq-status-badge--delay { background: #6b4d06; color: var(--mq-yellow); }
+.mq-status-badge--alert { background: #6b1429; color: var(--mq-red); }
+
+/* ---------- World Selector ---------- */
+.mq-worldbar {
+  display: flex;
+  gap: 6px;
+  padding: 6px 10px;
+  border-bottom: 2px solid var(--mq-border-dark);
+  background: rgba(16, 26, 69, 0.9);
+  overflow-x: auto;
+  flex: 0 0 auto;
+}
+
+.mq-worldbar__chip {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 6px 8px;
+  border: 2px solid var(--mq-border);
+  background: var(--mq-panel);
+  color: var(--mq-text);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.mq-worldbar__chip:hover {
+  background: var(--mq-panel-3);
+}
+
+.mq-worldbar__chip--active {
+  background: var(--mq-accent);
+  color: #04103a;
+  border-color: #a9fbff;
+}
+
+/* ---------- 右側 Train Panel ---------- */
+.mq-train-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mq-train-detail__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 2px solid var(--mq-border-dark);
+  background: rgba(16, 26, 69, 0.85);
+}
+
+.mq-train-detail__key {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--mq-text-dim);
+}
+
+.mq-train-detail__value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mq-text);
+  text-align: right;
+}
+
+.mq-train-detail__value--en {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+}
+
+.mq-train-detail__value--accent {
+  color: var(--mq-accent);
+}
+
+.mq-train-detail__value--delay {
+  color: var(--mq-red);
+}
+
+.mq-train-detail__value--green {
+  color: var(--mq-green);
+}
+
+.mq-train-detail__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 2px solid var(--mq-border-dark);
+  background: linear-gradient(180deg, var(--mq-panel-2), var(--mq-panel));
+}
+
+.mq-train-detail__id {
+  font-family: var(--mq-font-en);
+  font-size: 14px;
+  color: var(--mq-yellow);
+}
+
+.mq-empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 24px 10px;
+  text-align: center;
+}
+
+.mq-empty-hint__text {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  color: var(--mq-text-dim);
+  line-height: 1.8;
+}
+
+/* ---------- Pixel Window / Station Popup ---------- */
+.mq-window {
+  background: var(--mq-panel);
+  border: 3px solid var(--mq-border);
+  box-shadow:
+    inset 0 0 0 2px var(--mq-border-dark),
+    6px 6px 0 rgba(0, 0, 0, 0.55);
+  min-width: 230px;
+  max-width: 320px;
+}
+
+.mq-window__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--mq-panel-3);
+  border-bottom: 2px solid var(--mq-border-dark);
+}
+
+.mq-window__title {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--mq-accent);
+}
+
+.mq-window__close {
+  font-family: var(--mq-font-en);
+  font-size: 10px;
+  color: var(--mq-text);
+  background: #5a1630;
+  border: 2px solid var(--mq-red);
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.mq-window__body {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mq-arrival-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border: 2px solid var(--mq-border-dark);
+  background: rgba(16, 26, 69, 0.85);
+}
+
+.mq-arrival-row__dir {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mq-arrival-row__time {
+  font-family: var(--mq-font-en);
+  font-size: 10px;
+  color: var(--mq-yellow);
+}
+
+/* ---------- Loading Screen ---------- */
+.mq-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: #05060f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.mq-loading__title {
+  font-family: var(--mq-font-en);
+  font-size: 13px;
+  color: var(--mq-accent);
+  letter-spacing: 2px;
+}
+
+.mq-loading__bar {
+  width: 300px;
+  height: 22px;
+  border: 3px solid var(--mq-border);
+  background: #0a0e26;
+  position: relative;
+}
+
+.mq-loading__fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--mq-accent) 0 10px,
+    #7ffaff 10px 12px
+  );
+  width: 0%;
+  transition: width 120ms steps(6);
+}
+
+.mq-loading__pct {
+  font-family: var(--mq-font-en);
+  font-size: 10px;
+  color: var(--mq-yellow);
+}
+
+.mq-loading__train {
+  position: relative;
+  width: 360px;
+  height: 40px;
+  overflow: hidden;
+}
+
+.mq-loading__train-track {
+  position: absolute;
+  top: 34px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #33407a;
+}
+
+.mq-loading__train-sprite {
+  position: absolute;
+  top: 8px;
+  left: -90px;
+  animation: mq-run 2.4s steps(1) infinite;
+}
+
+@keyframes mq-run {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(450px); }
+}
+
+/* ---------- 404 ---------- */
+.mq-404 {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 50% 30%, #182358, #0a0e26 70%);
+}
+
+.mq-404__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 40px 50px;
+}
+
+.mq-404__code {
+  font-family: var(--mq-font-en);
+  font-size: 54px;
+  color: var(--mq-red);
+  text-shadow: 4px 4px 0 #350a14, 0 0 24px rgba(255, 93, 115, 0.5);
+}
+
+.mq-404__msg {
+  font-family: var(--mq-font-en);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--mq-yellow);
+}
+
+/* ---------- 錯誤 / 連線狀態 ---------- */
+.mq-alert-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 2px solid var(--mq-red);
+  background: rgba(107, 20, 41, 0.85);
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  color: var(--mq-red);
+  letter-spacing: 1px;
+}
+
+/* ---------- Mobile Bottom Sheet ---------- */
+.mq-bottom-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  background: var(--mq-panel);
+  border-top: 3px solid var(--mq-border);
+  box-shadow: 0 -6px 0 rgba(0, 0, 0, 0.45);
+  max-height: 45vh;
+  overflow-y: auto;
+  transform: translateY(110%);
+  transition: transform 200ms steps(4);
+}
+
+.mq-bottom-sheet--open {
+  transform: translateY(0);
+}
+
+.mq-bottom-sheet__handle {
+  width: 54px;
+  height: 6px;
+  background: var(--mq-border);
+  margin: 8px auto 4px;
+}
+
+.mq-bottom-sheet__body {
+  padding: 6px 12px 14px;
+}
+
+.mq-mobile-toggles {
+  display: none;
+}
+
+/* ===========================================================================
+   Responsive Breakpoints（提示詞二十七）
+   =========================================================================== */
+@media (max-width: 1023px) {
+  .mq-main {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+  .mq-panel-col--right {
+    display: none;
+  }
+  .mq-bottom-sheet--open {
+    display: block;
+  }
+  .mq-mobile-toggles {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .mq-main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+  .mq-panel-col--left {
+    display: none;
+  }
+  .mq-header__subtitle {
+    display: none;
+  }
+  .mq-header__title {
+    font-size: 12px;
+  }
+  .mq-clock__time {
+    font-size: 11px;
+  }
+  .mq-statusbar__label {
+    display: none;
+  }
+}
+
+@media (max-width: 414px) {
+  .mq-header {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+  .mq-clock__date {
+    display: none;
+  }
+  .mq-map__hint {
+    display: none;
+  }
+}
+
+@media (max-width: 320px) {
+  .mq-header__title {
+    font-size: 10px;
+  }
+}
+
+
+
