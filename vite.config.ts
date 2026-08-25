@@ -4,9 +4,10 @@ import react from '@vitejs/plugin-react';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // 使用相對路徑，使 build 產物可部署於 GitHub Pages 子路徑
-  //（https://wahaha232.github.io/MRTTRACKER/）與本機根目錄。
-  base: './',
+  // GitHub Pages 子路徑部署：https://wahaha232.github.io/MRTTRACKER/
+  // 固定 absolute base，配合 main.tsx 的 BrowserRouter basename，
+  // 讓 SPA 路由在子路徑下正確匹配（避免顯示 404）。
+  base: '/MRTTRACKER/',
   server: {
     port: 5173,
     host: true,
