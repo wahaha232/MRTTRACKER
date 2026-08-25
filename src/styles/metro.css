@@ -747,6 +747,7 @@
 
 /* ---------- Mobile Bottom Sheet ---------- */
 .mq-bottom-sheet {
+  display: none; /* 僅在 <=1023px 顯示 */
   position: absolute;
   left: 0;
   right: 0;
@@ -758,7 +759,8 @@
   max-height: 45vh;
   overflow-y: auto;
   transform: translateY(110%);
-  transition: transform 200ms steps(4);
+  transition: transform 220ms steps(5);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .mq-bottom-sheet--open {
@@ -772,12 +774,68 @@
   margin: 8px auto 4px;
 }
 
-.mq-bottom-sheet__body {
-  padding: 6px 12px 14px;
+.mq-bottom-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 12px 8px;
+  border-bottom: 2px solid var(--mq-border-dark);
 }
 
-.mq-mobile-toggles {
+.mq-bottom-sheet__title {
+  font-family: var(--mq-font-en);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--mq-accent);
+}
+
+.mq-bottom-sheet__body {
+  padding: 8px 12px calc(14px + env(safe-area-inset-bottom, 0px));
+}
+
+/* 手機浮動控制列（僅 <=767px 顯示） */
+.mq-mobile-bar {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 35;
   display: none;
+  gap: 8px;
+}
+
+.mq-mobile-bar .pixel-btn {
+  font-size: 9px;
+  padding: 9px 12px;
+  box-shadow:
+    inset 0 0 0 1px var(--mq-border-dark),
+    3px 3px 0 0 rgba(0, 0, 0, 0.55);
+}
+
+/* 手機 sheet 背景遮罩 */
+.mq-sheet-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 39;
+  display: none;
+  background: rgba(3, 5, 16, 0.4);
+}
+
+/* 手機 sheet 清單 */
+.mq-sheet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mq-sheet-list__hint {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--mq-text-dim);
+  text-align: center;
+  line-height: 1.8;
 }
 
 /* ===========================================================================
@@ -790,13 +848,11 @@
   .mq-panel-col--right {
     display: none;
   }
-  .mq-bottom-sheet--open {
+  .mq-bottom-sheet {
     display: block;
   }
-  .mq-mobile-toggles {
-    display: flex;
-    gap: 6px;
-    align-items: center;
+  .mq-sheet-backdrop--open {
+    display: block;
   }
 }
 
@@ -820,6 +876,36 @@
   .mq-statusbar__label {
     display: none;
   }
+  .mq-mode-tag {
+    display: none;
+  }
+  .mq-mobile-bar {
+    display: flex;
+  }
+  .mq-sheet-backdrop--open {
+    display: block;
+  }
+  .mq-bottom-sheet {
+    max-height: 55vh;
+  }
+  .mq-statusbar {
+    gap: 10px;
+    padding: 6px 10px;
+  }
+  .mq-statusbar__right {
+    display: none;
+  }
+  .mq-worldbar__chip {
+    font-size: 7px;
+    padding: 5px 6px;
+  }
+  .mq-header__right {
+    gap: 6px;
+  }
+  .mq-header__right .pixel-btn {
+    padding: 6px 7px;
+    font-size: 8px;
+  }
 }
 
 @media (max-width: 414px) {
@@ -833,11 +919,19 @@
   .mq-map__hint {
     display: none;
   }
+  .mq-map__toolbar {
+    right: 6px;
+    top: 6px;
+  }
 }
 
 @media (max-width: 320px) {
   .mq-header__title {
     font-size: 10px;
+  }
+  .mq-mobile-bar {
+    bottom: 8px;
+    gap: 6px;
   }
 }
 
