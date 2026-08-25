@@ -13,6 +13,7 @@ import { TrainPanel } from './components/TrainPanel';
 import { StatusBar } from './components/StatusBar';
 import { LoadingScreen } from './components/LoadingScreen';
 import { NotFound } from './components/NotFound';
+import { AdSlot } from './components/AdSlot';
 import { getRoute } from './data/routes';
 import { ROUTES } from './data/routes';
 import { getStation } from './data/stations';
@@ -313,6 +314,8 @@ function Dashboard() {
         </div>
         <TrainPanel />
       </div>
+      {/* 平板 / 手機：底部響應式橫幅廣告位（僅 <1024px 顯示，占位模式） */}
+      <AdSlot slotKey="BANNER" variant="banner" />
       <StatusBar />
     </div>
   );

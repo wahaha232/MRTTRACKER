@@ -71,6 +71,8 @@ export interface Dictionary {
   updatedAgo: string;
   coords: string;
   totalTrains: string;
+  adLabel: string;
+  adReserved: string;
 }
 
 const zh: Dictionary = {
@@ -140,6 +142,8 @@ const zh: Dictionary = {
   updatedAgo: '更新於',
   coords: '座標',
   totalTrains: '總列車數',
+  adLabel: 'AD · 廣告',
+  adReserved: 'GOOGLE ADSENSE 廣告位置保留中',
 };
 
 const en: Dictionary = {
@@ -209,6 +213,8 @@ const en: Dictionary = {
   updatedAgo: 'UPDATED',
   coords: 'COORD',
   totalTrains: 'TOTAL TRAINS',
+  adLabel: 'AD',
+  adReserved: 'SPACE RESERVED FOR GOOGLE ADSENSE',
 };
 
 export const dictionaries: Record<Language, Dictionary> = { zh, en };

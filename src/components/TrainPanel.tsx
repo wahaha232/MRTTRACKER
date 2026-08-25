@@ -6,6 +6,7 @@ import { dictionaries } from '../i18n/translations';
 import { getRoute } from '../data/routes';
 import { getStation } from '../data/stations';
 import { formatSeconds } from '../utils/time';
+import { AdSlot } from './AdSlot';
 import type { Language, Train } from '../types';
 
 interface RowProps {
@@ -154,6 +155,8 @@ export function TrainPanel() {
           </div>
         ) : null}
       </div>
+      {/* 桌面：右側 300×250 矩形廣告位（整欄僅 >=1024px 顯示） */}
+      <AdSlot slotKey="RECT" variant="rectangle" />
     </div>
   );
 }

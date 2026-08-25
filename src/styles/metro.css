@@ -162,6 +162,7 @@
 /* ---------- 中央地圖 ---------- */
 .mq-map-wrap {
   position: relative;
+  flex: 1 1 auto; /* 讓地圖填滿中央欄剩餘高度（修復既有版面 bug） */
   min-width: 0;
   min-height: 0;
   overflow: hidden;
@@ -744,6 +745,118 @@
   color: var(--mq-red);
   letter-spacing: 1px;
 }
+
+/* ---------- Google AdSense 廣告位（預留） ---------- */
+.mq-ad {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 12px;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(45deg, rgba(78, 246, 255, 0.025) 0 6px, transparent 6px 12px),
+    rgba(10, 14, 38, 0.92);
+  border: 3px dashed var(--mq-border);
+  box-shadow:
+    inset 0 0 0 2px var(--mq-border-dark),
+    inset 0 0 24px rgba(0, 0, 0, 0.35);
+  color: var(--mq-text-dim);
+  text-align: center;
+}
+
+.mq-ad--rectangle {
+  flex: 0 0 auto;
+  min-height: 200px;
+  border-top: 3px solid var(--mq-border-dark);
+}
+
+.mq-ad.mq-ad--banner {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 64px;
+  border-top: 3px solid var(--mq-border-dark);
+  display: none; /* 僅 <1024px 顯示 */
+}
+
+@media (max-width: 1023px) {
+  .mq-ad.mq-ad--banner {
+    display: flex;
+  }
+}
+
+/* 真實 AdSense 廣告模式：移除占位裝飾（display 交由上方 .mq-ad--banner 斷點控制） */
+.mq-ad--live {
+  padding: 4px;
+  background: transparent;
+  box-shadow: none;
+  border-style: solid;
+  overflow: hidden;
+}
+.mq-ad--live .adsbygoogle {
+  display: block;
+  width: 100%;
+}
+
+/* 防護：廣告創意異常過高時不破壞整體版面 */
+.mq-ad--live.mq-ad--rectangle {
+  max-height: 320px;
+}
+.mq-ad--live.mq-ad--banner {
+  max-height: 120px;
+}
+
+.mq-ad__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--mq-yellow);
+  background: var(--mq-panel-2);
+  border: 2px solid var(--mq-border-dark);
+  padding: 4px 8px;
+}
+
+.mq-ad__dot {
+  width: 7px;
+  height: 7px;
+  background: var(--mq-yellow);
+  animation: mq-blink 1.4s steps(2) infinite;
+}
+
+.mq-ad__text {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: var(--mq-text-dim);
+  line-height: 1.7;
+}
+
+.mq-ad__dim {
+  font-family: var(--mq-font-en);
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--mq-border);
+}
+
+.mq-ad__corner {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: var(--mq-border);
+  border-style: solid;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.mq-ad__corner--tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; }
+.mq-ad__corner--tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; }
+.mq-ad__corner--bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; }
+.mq-ad__corner--br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; }
 
 /* ---------- Mobile Bottom Sheet ---------- */
 .mq-bottom-sheet {
