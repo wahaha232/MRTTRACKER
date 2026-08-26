@@ -31,6 +31,20 @@ function mulberry32(seed: number): () => number {
   };
 }
 
+/**
+ * 路線專屬亂數種子：用 FNV-1a hash 對 route.id 的「字元內容」計算，
+ * 避免過去用「字串長度」當種子——不同 id 但同長度（如 R/G/O/Y）會產生
+ * 較相似的隨機模式。再混入唯一的 worldId 讓六條路線種子完全分離。
+ */
+function routeSeed(route: Route): number {
+  let h = 0x811c9dc5; // FNV offset basis
+  for (let i = 0; i < route.id.length; i += 1) {
+    h ^= route.id.charCodeAt(i);
+    h = Math.imul(h, 0x01000193); // FNV prime
+  }
+  return (h ^ route.worldId) >>> 0;
+}
+
 /** 取得路線所有可跑路徑（主線 + 支線） */
 function routePaths(route: Route): string[][] {
   return [route.stations, ...route.branches.map((b) => b.stations)];
@@ -63,7 +77,7 @@ export function generateMockTrains(): Train[] {
   for (const route of ROUTES) {
     const paths = routePaths(route);
     const n = TRAIN_COUNTS[route.id] ?? 10;
-    const rng = mulberry32(route.id.length * 7919 + route.worldId * 131);
+    const rng = mulberry32(routeSeed(route));
     for (let i = 0; i < n; i += 1) {
       const path = paths[Math.floor(rng() * paths.length)];
       if (path.length < 2) continue;

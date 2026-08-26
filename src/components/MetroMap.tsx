@@ -145,11 +145,17 @@ function useTrainPositions(
     }
     let raf = 0;
     let last = 0;
+    let lastFrameMs = 0;
     const loop = (nowMs: number) => {
       const now = Date.now();
+      // requestAnimationFrame 每幀回傳真實時間戳（nowMs），量測「實際 frame
+      // 間隔」取代寫死的 16（60fps 假設）。高更新率螢幕、分頁背景、低效
+      // 裝置的幀間隔都不同，用實測值讓插值更貼近真實時間。
+      const frameDt = lastFrameMs ? nowMs - lastFrameMs : 16;
+      lastFrameMs = nowMs;
       const map = new Map<string, TrainPosition>();
       for (const tr of trains) {
-        map.set(tr.id, calculateTrainPosition(tr, interpolatedProgress(tr, now, 16)));
+        map.set(tr.id, calculateTrainPosition(tr, interpolatedProgress(tr, now, frameDt)));
       }
       positionsRef.current = map;
       if (nowMs - last > 80) {
