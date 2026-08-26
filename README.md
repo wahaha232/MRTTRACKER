@@ -55,9 +55,14 @@ npm run test:watch # 監看模式執行測試
 
 ---
 
-## 📡 Live Mode（臺北捷運官方 Open Data API）
+## 📡 Live Mode（TDX 運輸資料流通服務平台）
 
-要啟用「即時列車」資料需向臺北捷運申請 API 金鑰。
+要啟用「即時到站看板」資料需向 [TDX](https://tdx.transportdata.tw/) 申請 API 金鑰
+（Client ID / Client Secret）。
+
+> ℹ️ TDX 提供的是台北捷運「車站電子看板」（某站還有哪些車次、預估幾秒後到站），
+> 不是列車即時 GPS 位置。因此 Live Mode 不會有地圖上移動的列車圖示（那是 Demo
+> Mode 的模擬效果），而是點擊車站顯示到站看板，呈現真實資料能提供的內容。
 
 ### 重要資安說明
 
@@ -65,17 +70,16 @@ npm run test:watch # 監看模式執行測試
 > Vite 會把所有 `VITE_` 開頭變數靜態打包進公開的前端 JS bundle，
 > 任何人打開瀏覽器 DevTools 或下載 bundle 檔就能看到金鑰。
 
-正確做法是透過 **伺服器端 proxy / Edge server**（例如 nginx、Cloudflare Worker、
-AWS Lambda@Edge）持有金鑰，再被瀏覽器轉發到官方 API：
+本專案部署在 GitHub Pages（純靜態，沒有後端），因此金鑰改放在
+**[`cloudflare-worker/`](cloudflare-worker/worker.js)** 這支獨立部署的 Cloudflare
+Worker 裡（免費方案即可），由它在伺服器端跟 TDX 換 access token、轉發捷運
+LiveBoard 資料，並用短秒數快取避免多人同時瀏覽時打爆 TDX 額度：
 
-1. **前端（本專案）只做兩件事**
-   - `VITE_METRO_API_BASE_URL`：設定「非機密」的 proxy 端點（同源路徑 `/metro`
-     或你自己架設的 proxy URL），瀏覽器只打這個路徑。
-   - 前端程式碼**不讀取、不發送**任何 API 金鑰（金鑰已從前端完全移除）。
-2. **伺服器端 proxy** 設定非-VITE 的 `METRO_API_KEY`，在伺服器端注入
-   `Authorization: Bearer <金鑰>` 後再轉發到官方 API。
-3. 本機開發時，`vite.config.ts` 已內建 dev proxy：瀏覽器連 `/metro`，
-   金鑰由 dev server 注入（不會進 bundle）。
+1. **前端（本專案）只做一件事**：`VITE_METRO_API_BASE_URL` 設定成部署好的
+   Worker 網址（例如 `https://mrttracker-tdx-proxy.<subdomain>.workers.dev`）。
+   前端程式碼**不讀取、不發送**任何 API 金鑰。
+2. **Worker 部署與金鑰設定步驟**見 [`cloudflare-worker/worker.js`](cloudflare-worker/worker.js)
+   檔案開頭的說明（`wrangler secret put` 設定金鑰、`wrangler deploy` 部署）。
 
 未設定 Live 時網站會自動 fallback 到 Demo Mode，並顯示連線警示。
 

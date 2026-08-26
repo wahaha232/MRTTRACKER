@@ -82,18 +82,26 @@ export interface TrainPosition {
 
 export interface StationArrival {
   stationId: string;
+  /** 該筆到站資料所屬路線 id（轉乘站可能同時有多路線的到站資料） */
+  routeId: string;
   directionZh: string;
   directionEn: string;
   /** 抵達秒數，null 表示資料不存在 */
   seconds: number | null;
 }
 
-export interface ApiTrainRaw {
-  trainId: string;
+/**
+ * TDX「捷運車站電子看板」raw 資料（Rail/Metro/LiveBoard/TRTC）。
+ * 官方捷運系統不對外公開列車即時 GPS 位置，只提供「車站到站看板」
+ * （某站還有哪些車次、預估幾秒後到站），因此 Live Mode 呈現的是到站看板，
+ * 不是地圖上移動的列車圖示（那是 Demo Mode 的模擬效果）。
+ */
+export interface ApiArrivalRaw {
   lineId: string;
-  direction: string;
-  currentStation: string;
-  nextStation: string;
-  remainingSeconds: number;
-  status: 'normal' | 'delay';
+  stationId: string;
+  destinationName: string;
+  headSign: string;
+  /** 預估到站秒數。TDX 文件寫分鐘，但實測回傳為秒數，故以秒解析。 */
+  estimateSeconds: number;
+  updateTime: string;
 }

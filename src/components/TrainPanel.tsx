@@ -43,7 +43,7 @@ function trainDetail(train: Train, language: Language) {
 }
 
 export function TrainPanel() {
-  const { language, trains, selectedTrainId, selectTrain } = useMetroStore();
+  const { language, mode, trains, selectedTrainId, selectTrain } = useMetroStore();
   const t = dictionaries[language];
   const train = trains.find((tr) => tr.id === selectedTrainId) ?? null;
   const list = trains.slice(0, 8);
@@ -113,7 +113,9 @@ export function TrainPanel() {
           <div className="mq-empty-hint">
             <span className="mq-train-detail__id">--</span>
             <span className="mq-empty-hint__text">{t.noTrainSelected}</span>
-            <span className="mq-empty-hint__text">{t.selectTrainHint}</span>
+            <span className="mq-empty-hint__text">
+              {mode === 'live' ? t.selectStationHint : t.selectTrainHint}
+            </span>
           </div>
         )}
 

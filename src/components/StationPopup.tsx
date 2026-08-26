@@ -18,12 +18,14 @@ interface StationPopupProps {
 }
 
 export function StationPopup({ stationId, anchorX, anchorY }: StationPopupProps) {
-  const { language, trains, closeSelection } = useMetroStore();
+  const { language, mode, trains, arrivals, closeSelection } = useMetroStore();
   const t = dictionaries[language];
   const station = getStation(stationId);
   if (!station) return null;
 
+  const isLive = mode === 'live';
   const stationTrains = trains.filter((tr) => tr.nextStationId === stationId);
+  const stationArrivals = arrivals.filter((a) => a.stationId === stationId);
   const route = station.routeIds.length > 0 ? getRoute(station.routeIds[0]) : undefined;
 
   const width = 260;
@@ -64,7 +66,28 @@ export function StationPopup({ stationId, anchorX, anchorY }: StationPopupProps)
           </div>
         ) : null}
 
-        {stationTrains.length === 0 ? (
+        {isLive ? (
+          stationArrivals.length === 0 ? (
+            <div className="mq-arrival-row">
+              <span className="mq-arrival-row__dir">{t.direction}</span>
+              <span className="mq-arrival-row__time">{t.none}</span>
+            </div>
+          ) : (
+            stationArrivals.slice(0, 4).map((a, i) => {
+              const r = getRoute(a.routeId);
+              return (
+                <div className="mq-arrival-row" key={`${a.routeId}-${i}`}>
+                  <span className="mq-arrival-row__dir">
+                    {t.to} {language === 'zh' ? a.directionZh : a.directionEn} · {r?.shortName}
+                  </span>
+                  <span className="mq-arrival-row__time">
+                    {a.seconds === null ? t.none : formatSeconds(a.seconds)}
+                  </span>
+                </div>
+              );
+            })
+          )
+        ) : stationTrains.length === 0 ? (
           <div className="mq-arrival-row">
             <span className="mq-arrival-row__dir">{t.direction}</span>
             <span className="mq-arrival-row__time">--</span>
@@ -90,18 +113,20 @@ export function StationPopup({ stationId, anchorX, anchorY }: StationPopupProps)
 
         <div className="mq-arrival-row">
           <span className="mq-arrival-row__dir">{t.position}</span>
-          <span className="mq-arrival-row__time">{t.estimated}</span>
+          <span className="mq-arrival-row__time">{isLive ? t.notAvailable : t.estimated}</span>
         </div>
-        <div className="mq-arrival-row">
-          <span className="mq-arrival-row__dir">{t.updated}</span>
-          <span className="mq-arrival-row__time">
-            {formatSeconds(
-              stationTrains.length > 0
-                ? Math.max(0, Math.round((Date.now() - stationTrains[0].updatedAt) / 1000))
-                : 0,
-            )}
-          </span>
-        </div>
+        {!isLive ? (
+          <div className="mq-arrival-row">
+            <span className="mq-arrival-row__dir">{t.updated}</span>
+            <span className="mq-arrival-row__time">
+              {formatSeconds(
+                stationTrains.length > 0
+                  ? Math.max(0, Math.round((Date.now() - stationTrains[0].updatedAt) / 1000))
+                  : 0,
+              )}
+            </span>
+          </div>
+        ) : null}
         <span style={{ fontFamily: 'var(--mq-font-en)', fontSize: 8, color: 'var(--mq-text-dim)' }}>
           {route ? `${route.shortName} · ${station.code}` : station.code}
         </span>

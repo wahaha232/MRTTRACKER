@@ -1,0 +1,6 @@
+name = "mrttracker-tdx-proxy"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# 金鑰請用 `wrangler secret put TDX_CLIENT_ID` / `wrangler secret put TDX_CLIENT_SECRET`
+# 設定，不要寫在這個檔案裡（這個檔案會進版控）。

@@ -35,6 +35,12 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # 非機密：已部署好的 Cloudflare Worker 網址（見 cloudflare-worker/）。
+          # 設定路徑：repo Settings → Secrets and variables → Actions →
+          # Variables → New repository variable，名稱需為 VITE_METRO_API_BASE_URL。
+          # 未設定時建置出來的網站會自動維持在 Demo Mode。
+          VITE_METRO_API_BASE_URL: ${{ vars.VITE_METRO_API_BASE_URL }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

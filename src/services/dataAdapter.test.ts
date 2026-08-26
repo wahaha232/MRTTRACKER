@@ -1,49 +1,45 @@
 import { describe, expect, it } from 'vitest';
-import type { ApiTrainRaw } from '../types';
-import { adaptApiTrains } from './dataAdapter';
+import type { ApiArrivalRaw } from '../types';
+import { adaptApiArrivals } from './dataAdapter';
 
-function raw(overrides: Partial<ApiTrainRaw> = {}): ApiTrainRaw {
+function raw(overrides: Partial<ApiArrivalRaw> = {}): ApiArrivalRaw {
   return {
-    trainId: 'R101',
     lineId: 'R',
-    direction: '1',
-    currentStation: '淡水',
-    nextStation: '紅樹林',
-    remainingSeconds: 60,
-    status: 'normal',
+    stationId: 'R28',
+    destinationName: '象山',
+    headSign: '往象山',
+    estimateSeconds: 60,
+    updateTime: '2026-01-01T00:00:00+08:00',
     ...overrides,
   };
 }
 
-describe('adaptApiTrains（API raw → 內部 Train）', () => {
-  it('把中文站名對應到內部 station id，並計算方向', () => {
-    const [train] = adaptApiTrains([raw()]);
-    expect(train).toBeDefined();
-    expect(train!.routeId).toBe('R');
-    expect(train!.currentStationId).toBe('r-tamsui');
-    expect(train!.nextStationId).toBe('r-hongshulin');
-    expect(train!.direction).toBe(1);
+describe('adaptApiArrivals（TDX LiveBoard raw → 內部 StationArrival）', () => {
+  it('依站碼與路線 id 對應到內部 station/route id', () => {
+    const [arrival] = adaptApiArrivals([raw()]);
+    expect(arrival).toBeDefined();
+    expect(arrival!.stationId).toBe('r-tamsui');
+    expect(arrival!.routeId).toBe('R');
+    expect(arrival!.directionZh).toBe('往象山');
   });
 
-  it('delay 狀態正確反映 status 與 delaySeconds', () => {
-    const t = raw({ status: 'delay', remainingSeconds: 10 });
-    const [train] = adaptApiTrains([t]);
-    expect(train!.status).toBe('delay');
-    expect(train!.delaySeconds).toBeGreaterThan(0);
+  it('TRTC- 前綴的 LineID 也能正確比對路線', () => {
+    const [arrival] = adaptApiArrivals([raw({ lineId: 'TRTC-R' })]);
+    expect(arrival!.routeId).toBe('R');
   });
 
-  it('剩餘秒數為 0/負數時，至少保留 1 秒（不產生無意義 0）', () => {
-    const [train] = adaptApiTrains([raw({ remainingSeconds: 0 })]);
-    expect(train!.remainingSeconds).toBeGreaterThanOrEqual(1);
+  it('秒數為負數時，至少保留 0 秒（不產生負值）', () => {
+    const [arrival] = adaptApiArrivals([raw({ estimateSeconds: -5 })]);
+    expect(arrival!.seconds).toBe(0);
   });
 
-  it('「未知路線」會被忽略（不滲入 Train 清單）', () => {
-    const trains = adaptApiTrains([raw({ lineId: 'ZZ' })]);
-    expect(trains).toHaveLength(0);
+  it('「未知路線」會被忽略（不滲入結果）', () => {
+    const arrivals = adaptApiArrivals([raw({ lineId: 'ZZ' })]);
+    expect(arrivals).toHaveLength(0);
   });
 
-  it('「未知站名」的被丟棄，不輸出錯誤資料', () => {
-    const trains = adaptApiTrains([raw({ currentStation: '不存在的車站' })]);
-    expect(trains).toHaveLength(0);
+  it('「未知站碼」的被丟棄，不輸出錯誤資料', () => {
+    const arrivals = adaptApiArrivals([raw({ stationId: 'NOT-A-STATION' })]);
+    expect(arrivals).toHaveLength(0);
   });
 });

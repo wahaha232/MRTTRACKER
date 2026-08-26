@@ -13,10 +13,10 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { Language, Mode, SystemStatus, Train } from '../types';
+import type { Language, Mode, StationArrival, SystemStatus, Train } from '../types';
 import { generateMockTrains, tickDemoTrains } from '../services/mockMetroApi';
-import { fetchLiveTrains, isLiveConfigured, getLiveConfig } from '../services/metroApi';
-import { adaptApiTrains } from '../services/dataAdapter';
+import { fetchLiveArrivals, isLiveConfigured, getLiveConfig } from '../services/metroApi';
+import { adaptApiArrivals } from '../services/dataAdapter';
 import { playAlert, playArrival } from '../utils/sound';
 
 interface MetroStoreValue {
@@ -24,6 +24,8 @@ interface MetroStoreValue {
   language: Language;
   soundOn: boolean;
   trains: Train[];
+  /** Live Mode 的車站到站看板資料（TDX 只提供看板，不提供列車即時位置） */
+  arrivals: StationArrival[];
   systemStatus: SystemStatus;
   lastUpdatedAt: number | null;
   nextUpdateIn: number;
@@ -50,6 +52,7 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>('zh');
   const [soundOn, setSoundOn] = useState(false);
   const [trains, setTrains] = useState<Train[]>(() => generateMockTrains());
+  const [arrivals, setArrivals] = useState<StationArrival[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(Date.now());
   const [nextUpdateIn, setNextUpdateIn] = useState<number>(1);
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
@@ -101,6 +104,7 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
   // ---- Demo / Live 引擎主迴圈 ----
   useEffect(() => {
     if (mode === 'demo') {
+      setArrivals([]);
       const timer = window.setInterval(() => {
         const now = Date.now();
         const next = tickDemoTrains(trainsRef.current, now);
@@ -110,30 +114,27 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
       return () => window.clearInterval(timer);
     }
 
-    // Live mode
+    // Live mode：TDX 只提供車站到站看板，沒有列車即時位置，
+    // 地圖上不畫移動的列車圖示，改由點擊車站顯示到站看板。
     if (!liveConfigured) {
       setLiveError(true);
       setModeState('demo');
       return;
     }
 
+    setTrains([]);
     let cancelled = false;
     const load = async () => {
       try {
-        const raw = await fetchLiveTrains();
+        const raw = await fetchLiveArrivals();
         if (cancelled) return;
-        const adapted = adaptApiTrains(raw);
+        const adapted = adaptApiArrivals(raw);
         setLiveError(false);
-        if (adapted.length > 0) {
-          applyTrains(adapted, Date.now());
-        }
+        setArrivals(adapted);
+        setLastUpdatedAt(Date.now());
       } catch {
         if (cancelled) return;
         setLiveError(true);
-        // 錯誤處理：fallback 到 demo tick，不白屏
-        const now = Date.now();
-        const next = tickDemoTrains(trainsRef.current, now);
-        applyTrains(next, now);
       }
       setNextUpdateIn(updateInterval);
     };
@@ -198,6 +199,7 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
     language,
     soundOn,
     trains,
+    arrivals,
     systemStatus,
     lastUpdatedAt,
     nextUpdateIn,
