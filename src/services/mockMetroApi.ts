@@ -37,7 +37,7 @@ function routePaths(route: Route): string[][] {
 }
 
 /** 列車抵達 nextStation 後，計算新的 current/next 配對與方向 */
-function nextPair(route: Route, train: Train): { current: string; next: string; dir: 1 | -1 } {
+export function nextPair(route: Route, train: Train): { current: string; next: string; dir: 1 | -1 } {
   const paths = routePaths(route);
   for (const p of paths) {
     const ci = p.indexOf(train.currentStationId);

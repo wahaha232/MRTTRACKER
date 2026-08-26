@@ -37,9 +37,13 @@ export function Header() {
       </div>
 
       <div className="mq-header__right">
-        <div className="mq-live" role="status" aria-label={t.live}>
+        <div
+          className={`mq-live${mode === 'live' ? '' : ' mq-live--demo'}`}
+          role="status"
+          aria-label={mode === 'live' ? t.live : t.demoMode}
+        >
           <span className="mq-live__dot" aria-hidden="true" />
-          <span>{t.live}</span>
+          <span>{mode === 'live' ? t.live : t.demoMode}</span>
         </div>
 
         <div className="mq-clock">

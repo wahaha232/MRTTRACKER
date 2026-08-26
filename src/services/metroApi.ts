@@ -1,16 +1,23 @@
 // ---------------------------------------------------------------------------
 // METRO QUEST — Live Mode API 客戶端（提示詞十三 / 五十六）
 // API endpoint 來自 .env：
-//   VITE_METRO_API_BASE_URL
-//   VITE_METRO_API_KEY
+//   VITE_METRO_API_BASE_URL（僅非機密、經 proxy 轉發的端點；瀏覽器可存取）
 // 若未設定或連線失敗，呼叫端會自動 fallback 到 Demo Mode。
-// 切勿把真正的 API Secret 提交到 repository。
+//
+// ⚠️ 資安原則（務必遵守）：
+//   - API 金鑰（METRO_API_KEY）是「僅伺服器端」的密鑰，絕不能寫進任何
+//     VITE_ 環境變數。Vite 會把所有 VITE_ 開頭變數靜態打包進公開的前端
+//     JS bundle，任何人打開 DevTools 就能看到。
+//   - 瀏覽器一律呼叫「同源 proxy 路徑」（預設 /api/... 或此處設定的端點），
+//     由 proxy / Edge server（例如 nginx、Cloudflare Worker、AWS Lambda@Edge）
+//     在伺服器端注入 API 金鑰後再轉發到官方 API。
+//   - 本檔不得持有、讀取或發送任何 API 金鑰。
 // ---------------------------------------------------------------------------
 import type { ApiTrainRaw } from '../types';
 
 export interface LiveConfig {
+  /** proxy 端點（非機密）。預設為同源相對路徑，由伺服器端 proxy 掛載。 */
   baseUrl: string;
-  apiKey: string;
   updateInterval: number;
   timeoutMs: number;
 }
@@ -18,8 +25,7 @@ export interface LiveConfig {
 /** 從環境變數讀取 Live 設定 */
 export function getLiveConfig(): LiveConfig {
   return {
-    baseUrl: (import.meta.env.VITE_METRO_API_BASE_URL as string | undefined) ?? '',
-    apiKey: (import.meta.env.VITE_METRO_API_KEY as string | undefined) ?? '',
+    baseUrl: (import.meta.env.VITE_METRO_API_BASE_URL as string | undefined) ?? '/metro',
     updateInterval: Number(import.meta.env.VITE_METRO_UPDATE_INTERVAL ?? 10),
     timeoutMs: 8000,
   };
@@ -33,7 +39,9 @@ export function isLiveConfigured(): boolean {
 
 /**
  * 呼叫官方 API 取得列車位置。
- * 請在 proxy 端完成驗證；此處僅在前端保留非機密 base url。
+ * 驗證一律在伺服器端 proxy 完成；瀏覽器只發 request 到「非機密的 proxy
+ * 路徑」（可以是同源相對路徑，或受你控制的 proxy 端點），因此前端永遠
+ * 不需也不得持有 API 金鑰。
  */
 export async function fetchLiveTrains(signal?: AbortSignal): Promise<ApiTrainRaw[]> {
   const cfg = getLiveConfig();
@@ -46,8 +54,9 @@ export async function fetchLiveTrains(signal?: AbortSignal): Promise<ApiTrainRaw
 
   const url = `${cfg.baseUrl.replace(/\/$/, '')}/live/getLiveTrainPosition`;
   const headers: Record<string, string> = { Accept: 'application/json' };
-  if (cfg.apiKey) headers.Authorization = `Bearer ${cfg.apiKey}`;
 
+  // 注意：此 request 不含任何 Authorization header。API 金鑰只存在伺服器端
+  //（proxy / Edge server），由伺服器注入後再轉發到官方 API。
   try {
     const res = await fetch(url, { headers, signal: ac });
     if (!res.ok) {

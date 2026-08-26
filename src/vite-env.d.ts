@@ -2,7 +2,6 @@
 
 interface ImportMetaEnv {
   readonly VITE_METRO_API_BASE_URL?: string;
-  readonly VITE_METRO_API_KEY?: string;
   readonly VITE_METRO_UPDATE_INTERVAL?: string;
   readonly VITE_ADS_ENABLED?: string;
   readonly VITE_ADS_CLIENT?: string;

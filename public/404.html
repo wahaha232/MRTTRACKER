@@ -3,13 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <title>Metro Quest</title>
-    <meta http-equiv="refresh" content="0; url=./" />
+    <meta http-equiv="refresh" content="0; url=/MRTTRACKER/" />
     <script>
-      // 讓 GitHub Pages 的 404 轉回應用程式入口（SPA fallback）
-      location.replace('./');
+      // 讓 GitHub Pages 的 404 轉回應用程式入口（SPA fallback）。
+      // 不能用相對路徑 './'：當使用者輸入如 /MRTTRACKER/some/deep/path 這種
+      // 兩層以上的巢狀網址時，'./' 會解析成 /MRTTRACKER/some/（導錯地方）。
+      // 這裡從目前 origin + pathname 的「第一段」取出專案根路徑（/MRTTRACKER/），
+      // 任何巢狀深度都能正確回到真正的網站根目錄。
+      var segs = location.pathname.split('/').filter(Boolean); // 例: ["MRTTRACKER", "some", "deep"]
+      var root = '/' + (segs[0] ? segs[0] : '') + '/';          // 例: "/MRTTRACKER/"
+      location.replace(location.origin + root);
     </script>
   </head>
   <body>
-    <p><a href="./">RETURN TO MAP</a></p>
+    <p><a href="/MRTTRACKER/">RETURN TO MAP</a></p>
   </body>
 </html>

@@ -1,24 +1,52 @@
 // ---------------------------------------------------------------------------
 // METRO QUEST — 時間工具
+// 時間一律以「台北時區（Asia/Taipei）」顯示，避免使用者所在時區不同而造成
+// 誤導（這是台北捷運追蹤網站，顯示的便是台北時間）。
 // ---------------------------------------------------------------------------
 
 function pad2(n: number): string {
   return n < 10 ? `0${n}` : String(n);
 }
 
-/** 現在時間 HH:MM:SS */
+/** 用指定的時區取得 Date 的各時間欄位（hour/min/sec/year/month/day） */
+function partsInZone(d: Date, timeZone = 'Asia/Taipei') {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(d);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '00';
+  return {
+    hour: Number(get('hour')),
+    minute: Number(get('minute')),
+    second: Number(get('second')),
+    year: Number(get('year')),
+    month: Number(get('month')),
+    day: Number(get('day')),
+  };
+}
+
+/** 現在時間 HH:MM:SS（台北時區） */
 export function formatClock(d: Date): string {
-  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+  const p = partsInZone(d);
+  return `${pad2(p.hour)}:${pad2(p.minute)}:${pad2(p.second)}`;
 }
 
-/** 現在時間 HH:MM（手機 HUD 用） */
+/** 現在時間 HH:MM（手機 HUD 用，台北時區） */
 export function formatClockShort(d: Date): string {
-  return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+  const p = partsInZone(d);
+  return `${pad2(p.hour)}:${pad2(p.minute)}`;
 }
 
-/** 日期 YYYY-MM-DD */
+/** 日期 YYYY-MM-DD（台北時區） */
 export function formatDate(d: Date): string {
-  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+  const p = partsInZone(d);
+  return `${p.year}-${pad2(p.month)}-${pad2(p.day)}`;
 }
 
 /** 秒數 → MM:SS（例 82 → 01:22） */
