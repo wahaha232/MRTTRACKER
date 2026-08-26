@@ -196,6 +196,9 @@ export function MetroMap() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
   const [view, setView] = useState<ViewState>({ x: 0, y: 0, k: 1 });
+  /** SVG viewBox 固定等於容器像素大小，讓 <g> transform 的世界座標＝畫面像素，
+      避免 preserveAspectRatio 的自動縮放與 fit/zoom 邏輯的縮放互相打架導致地圖偏移。 */
+  const [containerSize, setContainerSize] = useState({ width: 1, height: 1 });
   const viewRef = useRef<ViewState>({ x: 0, y: 0, k: 1 });
   const targetRef = useRef<ViewState>({ x: 0, y: 0, k: 1 });
   const trainsRef = useRef<Train[]>(trains);
@@ -220,6 +223,7 @@ export function MetroMap() {
     const fit = () => {
       const rect = wrapRef.current?.getBoundingClientRect();
       if (!rect || rect.width === 0 || rect.height === 0) return;
+      setContainerSize({ width: rect.width, height: rect.height });
       const k = clampK(INITIAL_SCALE);
       const v: ViewState = {
         x: rect.width / 2 - (WORLD_W / 2) * k,
@@ -415,8 +419,7 @@ export function MetroMap() {
       <svg
         ref={svgRef}
         className={`mq-map${draggingRef.current ? ' dragging' : ''}`}
-        viewBox={`0 0 ${WORLD_W} ${WORLD_H}`}
-        preserveAspectRatio="xMidYMid slice"
+        viewBox={`0 0 ${containerSize.width} ${containerSize.height}`}
         role="application"
         aria-label="Taipei Metro pixel world map"
         onWheel={handleWheel}

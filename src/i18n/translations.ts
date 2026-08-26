@@ -53,8 +53,16 @@ export interface Dictionary {
   dataSourceName: string;
   openData: string;
   dataSourceUrl: string;
+  easycardName: string;
+  easycardUrl: string;
+  taipeiTourismName: string;
+  taipeiTourismUrl: string;
+  newTaipeiTourismName: string;
+  newTaipeiTourismUrl: string;
   soundOn: string;
   soundOff: string;
+  fullscreenOn: string;
+  fullscreenOff: string;
   selectRoute: string;
   allRoutes: string;
   selectTrainHint: string;
@@ -124,8 +132,16 @@ const zh: Dictionary = {
   dataSourceName: '臺北大眾捷運股份有限公司',
   openData: 'Government Open Data',
   dataSourceUrl: 'https://www.metro.taipei/',
+  easycardName: '悠遊卡股份有限公司',
+  easycardUrl: 'https://www.easycard.com.tw/',
+  taipeiTourismName: '臺北旅遊網',
+  taipeiTourismUrl: 'https://www.travel.taipei/',
+  newTaipeiTourismName: '新北旅遊網',
+  newTaipeiTourismUrl: 'https://tour.ntpc.gov.tw/',
   soundOn: '音效 ON',
   soundOff: '音效 OFF',
+  fullscreenOn: '全螢幕 ON',
+  fullscreenOff: '全螢幕 OFF',
   selectRoute: '全部路線',
   allRoutes: 'ALL',
   selectTrainHint: '點擊地圖上的列車以查看詳情',
@@ -195,8 +211,16 @@ const en: Dictionary = {
   dataSourceName: 'Taipei Rapid Transit Corporation',
   openData: 'Government Open Data',
   dataSourceUrl: 'https://www.metro.taipei/',
+  easycardName: 'EasyCard Corporation',
+  easycardUrl: 'https://www.easycard.com.tw/',
+  taipeiTourismName: 'Taipei Travel Net',
+  taipeiTourismUrl: 'https://www.travel.taipei/',
+  newTaipeiTourismName: 'New Taipei Travel Net',
+  newTaipeiTourismUrl: 'https://tour.ntpc.gov.tw/',
   soundOn: 'SOUND ON',
   soundOff: 'SOUND OFF',
+  fullscreenOn: 'FULLSCREEN ON',
+  fullscreenOff: 'FULLSCREEN OFF',
   selectRoute: 'ALL ROUTES',
   allRoutes: 'ALL',
   selectTrainHint: 'Click a train on the map to inspect it',

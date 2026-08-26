@@ -29,6 +29,23 @@ export function Header() {
     setMode(mode === 'demo' ? 'live' : 'demo');
   };
 
+  const [isFullscreen, setIsFullscreen] = useState(() => !!document.fullscreenElement);
+
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    unlockAudio();
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  };
+
   return (
     <header className="mq-header">
       <div className="mq-header__brand">
@@ -79,6 +96,16 @@ export function Header() {
           aria-label={soundOn ? t.soundOn : t.soundOff}
         >
           {soundOn ? '🔊' : '🔇'}
+        </button>
+
+        <button
+          type="button"
+          className="pixel-btn"
+          onClick={toggleFullscreen}
+          aria-pressed={isFullscreen}
+          aria-label={isFullscreen ? t.fullscreenOn : t.fullscreenOff}
+        >
+          ⛶
         </button>
 
         {!liveConfigured && mode === 'live' ? (

@@ -65,6 +65,33 @@ export function StatusBar() {
         >
           {t.dataSource} · {t.openData}
         </a>
+        <a
+          className="mq-statusbar__stat"
+          href={t.easycardUrl}
+          target="_blank"
+          rel="noreferrer"
+          title={t.easycardName}
+        >
+          {t.easycardName}
+        </a>
+        <a
+          className="mq-statusbar__stat"
+          href={t.taipeiTourismUrl}
+          target="_blank"
+          rel="noreferrer"
+          title={t.taipeiTourismName}
+        >
+          {t.taipeiTourismName}
+        </a>
+        <a
+          className="mq-statusbar__stat"
+          href={t.newTaipeiTourismUrl}
+          target="_blank"
+          rel="noreferrer"
+          title={t.newTaipeiTourismName}
+        >
+          {t.newTaipeiTourismName}
+        </a>
       </div>
     </footer>
   );
