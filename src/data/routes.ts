@@ -127,6 +127,7 @@ export const ROUTES: Route[] = [
       'o-guting',
       'o-dongmen',
       'o-zhongxiao-xinsheng',
+      'o-nanjing-fuxing',
       'o-songjiang-nanjing',
       'o-xingtian',
       'o-zhongshan-guoxiao',

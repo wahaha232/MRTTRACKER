@@ -2,12 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => ({
   plugins: [react()],
-  // dev 於根路徑提供服務（http://localhost:5173/），build 產物才使用
-  // GitHub Pages 子路徑 base（/MRTTRACKER/）。配合 main.tsx 的
-  // BrowserRouter basename={import.meta.env.BASE_URL}，兩邊路由皆正確。
-  base: command === 'build' ? '/MRTTRACKER/' : '/',
+  // dev 於根路徑提供服務（http://localhost:5173/）；build 與 preview 則使用
+  // GitHub Pages 子路徑 base（/MRTTRACKER/），與 dist 內的資源路徑一致。
+  // 注意：vite preview 的 command 同為 'serve'，故需以 mode 區分。
+  base: command === 'serve' && mode !== 'production' ? '/' : '/MRTTRACKER/',
   server: {
     port: 5173,
     host: true,
