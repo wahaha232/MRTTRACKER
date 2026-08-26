@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
-// METRO QUEST — Pixel Metro World Map（提示詞六 / 七 / 十 / 十一 / 十七 / 二十五）
-// SVG 路網 + Pixel Train 平滑動畫（requestAnimationFrame）+ 縮放 / 平移。
+// METRO QUEST — 現代扁平運輸圖（Metro Map）
+// SVG 路網 + 列車平滑動畫（requestAnimationFrame）+ 縮放 / 平移。
 // 效能：列車位置集中於 ref 更新，不為每台列車建立 React state。
 // ---------------------------------------------------------------------------
 import { useEffect, useMemo, useRef, useState, type WheelEvent as ReactWheelEvent } from 'react';
@@ -50,88 +50,6 @@ function useReducedMotion(): boolean {
     return () => mq.removeEventListener('change', handler);
   }, []);
   return reduced;
-}
-
-// ---------------------------------------------------------------------------
-// Pixel Environment（提示詞二十三：深藍天空 / pixel clouds / mountains /
-// trees / islands / water / buildings）—— 純裝飾，位於路線圖後方。
-// ---------------------------------------------------------------------------
-function PixelBackground() {
-  return (
-    <g aria-hidden="true">
-      {/* SMB3 世界地圖天空：米黃/日間色調 */}
-      <rect x="0" y="0" width={WORLD_W} height={WORLD_H} fill="#e9cd9c" />
-      {/* 雲朵 */}
-      <rect x="80" y="90" width="60" height="10" fill="#fff8ea" opacity="0.9" />
-      <rect x="92" y="82" width="34" height="8" fill="#fff8ea" opacity="0.9" />
-      <rect x="780" y="110" width="70" height="10" fill="#fff8ea" opacity="0.75" />
-      <rect x="795" y="100" width="40" height="10" fill="#fff8ea" opacity="0.75" />
-      <rect x="360" y="70" width="50" height="8" fill="#fff8ea" opacity="0.6" />
-      {/* 遠山：暖棕色丘陵 */}
-      {[
-        [0, 470, 30], [30, 450, 34], [60, 480, 26], [90, 455, 30],
-        [960, 480, 30], [990, 455, 34], [1020, 470, 26], [1050, 450, 30],
-      ].map(([mx, my, mh], i) => (
-        <polygon key={`mt-${i}`} points={`${mx},${my + (mh as number) * 2} ${mx + (mh as number) / 2},${my} ${mx + (mh as number)},${my + (mh as number) * 2}`} fill="#c9955c" stroke="#96683a" strokeWidth="1" />
-      ))}
-      {/* 水：晴天藍 */}
-      <rect x="0" y="790" width="230" height="60" fill="#5aa9e6" stroke="#2f6db3" strokeWidth="1" />
-      <rect x="60" y="798" width="14" height="4" fill="#8ccbf5" />
-      <rect x="110" y="812" width="14" height="4" fill="#8ccbf5" />
-      <rect x="170" y="800" width="10" height="3" fill="#8ccbf5" />
-      <rect x="240" y="805" width="16" height="4" fill="#5aa9e6" />
-      <rect x="290" y="818" width="16" height="4" fill="#8ccbf5" />
-      <rect x="980" y="770" width="100" height="80" fill="#5aa9e6" stroke="#2f6db3" strokeWidth="1" />
-      <rect x="1000" y="790" width="12" height="4" fill="#8ccbf5" />
-      <rect x="1040" y="805" width="12" height="4" fill="#8ccbf5" />
-      {/* 樹木 */}
-      {[
-        [30, 690], [70, 705], [115, 690], [160, 720], [1000, 700], [1030, 720],
-        [1060, 690], [180, 660], [55, 760], [95, 775], [1005, 745],
-      ].map(([tx, ty], i) => (
-        <g key={`tree-${i}`}>
-          <rect x={tx} y={ty} width="6" height="8" fill="#1c3a1f" />
-          <rect x={tx - 5} y={ty - 8} width="16" height="10" fill="#2f6b33" />
-        </g>
-      ))}
-      {/* SMB3 世界地圖灌木叢（像素半圓，純裝飾） */}
-      {[
-        [48, 630], [132, 668], [206, 640], [330, 668], [256, 772],
-        [720, 782], [862, 666], [1014, 636], [478, 700],
-      ].map(([bx, by], i) => (
-        <g key={`bush-${i}`}>
-          <rect x={bx + 4} y={by - 4} width="6" height="4" fill="#3f8a3f" />
-          <rect x={bx} y={by} width="14" height="4" fill="#2f6b33" />
-          <rect x={bx + 2} y={by - 2} width="4" height="2" fill="#7ec850" />
-          <rect x={bx + 8} y={by - 2} width="4" height="2" fill="#7ec850" />
-        </g>
-      ))}
-      {/* SMB3 山坡（遠景三角綠色丘陵） */}
-      {[
-        [10, 820, 40], [250, 835, 55], [600, 825, 30], [880, 838, 60],
-      ].map(([hx, hy, hs], i) => (
-        <polygon
-          key={`hill-${i}`}
-          points={`${hx},${hy + (hs as number)} ${hx + (hs as number) / 2},${hy} ${hx + (hs as number)},${hy + (hs as number)}`}
-          fill="#1e5a2e"
-          opacity="0.5"
-        />
-      ))}
-      {/* 遠景石塔群（日間石磚色，取代原本的夜間發光高樓） */}
-      {[
-        [20, 620], [34, 606], [50, 630], [70, 612], [86, 632],
-        [930, 610], [948, 596], [964, 620], [982, 604], [998, 628],
-      ].map(([bx, by], i) => (
-        <rect key={`bld-${i}`} x={bx} y={by} width="10" height={770 - (by as number)} fill="#8a6d4a" stroke="#5c4527" strokeWidth="1" />
-      ))}
-      {[30, 44, 60, 74, 88].map((ox, i) => (
-        <rect key={`win-${i}`} x={ox} y="630" width="3" height="3" fill="#fbf2df" opacity="0.55" />
-      ))}
-      {[940, 956, 972, 988, 1004].map((ox, i) => (
-        <rect key={`win2-${i}`} x={ox} y="612" width="3" height="3" fill="#fbf2df" opacity="0.55" />
-      ))}
-    </g>
-  );
 }
 
 // ---------------------------------------------------------------------------
@@ -427,7 +345,7 @@ export function MetroMap() {
         viewBox={`0 0 ${WORLD_W} ${WORLD_H}`}
         preserveAspectRatio="xMidYMid slice"
         role="application"
-        aria-label="Taipei Metro pixel world map"
+        aria-label="Taipei Metro schematic map"
         onWheel={handleWheel}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
@@ -439,9 +357,7 @@ export function MetroMap() {
         }}
       >
         <g ref={gRef}>
-          <PixelBackground />
-
-          {/* 路線（提示詞八：pixel border / glow / shadow） */}
+          {/* 路線：白色外框 + 彩色實線，交錯處仍清楚可辨 */}
           {ALL_ROUTE_PATHS.map((rp) => {
             const route = ROUTES.find((r) => r.id === rp.routeId);
             if (!route) return null;
@@ -455,10 +371,8 @@ export function MetroMap() {
                 }`}
                 onClick={(e) => e.stopPropagation()}
               >
-                <path className="mq-route-path mq-route-shadow" d={rp.d} />
+                <path className="mq-route-path mq-route-casing" d={rp.d} />
                 <path className="mq-route-path mq-route-core" d={rp.d} stroke={route.color} />
-                <path className="mq-route-path mq-route-bricks--glow" d={rp.d} stroke={route.color} />
-                <path className="mq-route-path mq-route-bricks" d={rp.d} stroke={route.color} />
               </g>
             );
           })}
@@ -496,39 +410,31 @@ export function MetroMap() {
               >
                 {terminal ? (
                   <g transform={`translate(${station.x} ${station.y})`}>
-                    {/* SMB3 終點：城堡 + 旗 */}
-                    <rect x="-9" y="-2" width="18" height="8" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1.5" />
-                    <rect x="-5" y="-5" width="10" height="4" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1.5" />
-                    {/* 城垛 */}
-                    <rect x="-7" y="-2" width="2" height="2" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1" />
-                    <rect x="5" y="-2" width="2" height="2" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1" />
-                    {/* 城門 */}
-                    <rect x="-2" y="1" width="4" height="5" fill="#160d00" />
-                    {/* 旗 */}
-                    <rect className="mq-flag-pole" x="-1" y="-11" width="1.5" height="9" fill="#cfd6f0" stroke="#0a0e26" strokeWidth="0.6" />
-                    <path
-                      className="mq-flag"
-                      d="M -1 -11 L -8 -9 L -1 -7 Z"
-                      fill={route?.color ?? '#e3002c'}
-                      stroke="#0a0e26"
-                      strokeWidth="0.8"
-                      strokeLinejoin="round"
+                    {/* 終點站：雙圈標記 */}
+                    <circle
+                      className="mq-station__marker mq-station__marker--terminal-ring"
+                      r="7"
+                      stroke={route?.color ?? 'var(--mq-text-dim)'}
                     />
+                    <circle r="3" fill={route?.color ?? 'var(--mq-text-dim)'} />
                   </g>
                 ) : isTransfer ? (
                   <g transform={`translate(${station.x} ${station.y})`}>
-                    {/* SMB3 轉乘：大型紅磚塊 */}
-                    <rect className="mq-station__marker mq-station__marker--transfer" x="-8" y="-8" width="16" height="16" />
-                    <line x1="-8" y1="-2.6" x2="8" y2="-2.6" stroke="#160d00" strokeWidth="1.4" />
-                    <line x1="-8" y1="2.6" x2="8" y2="2.6" stroke="#160d00" strokeWidth="1.4" />
-                    <line x1="-2.6" y1="-8" x2="-2.6" y2="-2.6" stroke="#160d00" strokeWidth="1.4" />
-                    <line x1="2.6" y1="2.6" x2="2.6" y2="8" stroke="#160d00" strokeWidth="1.4" />
+                    {/* 轉乘站：白底彩色外框圓點 */}
+                    <circle
+                      className="mq-station__marker mq-station__marker--transfer"
+                      r="7"
+                      stroke="var(--mq-text)"
+                    />
                   </g>
                 ) : (
                   <g transform={`translate(${station.x} ${station.y})`}>
-                    {/* 普通站：金色磚塊 + 中央凸起裝飾（通用圖案，非特定商標符號） */}
-                    <rect className="mq-station__marker mq-station__marker--block" x="-6" y="-6" width="12" height="12" />
-                    <rect x="-2" y="-2" width="4" height="4" fill="#fff3c4" opacity="0.9" />
+                    {/* 一般站：實心色點 */}
+                    <circle
+                      className="mq-station__marker mq-station__marker--block"
+                      r="4.5"
+                      fill={route?.color ?? 'var(--mq-text-dim)'}
+                    />
                   </g>
                 )}
                 <text className="mq-station__label" x={labelX} y={labelY} textAnchor={anchorEnd}>
@@ -557,7 +463,7 @@ export function MetroMap() {
                 pointerEvents="auto"
               >
                 {isSel ? (
-                  <rect x="-28" y="-18" width="56" height="36" fill="none" stroke="#4ef6ff" strokeWidth="2" opacity="0.9" />
+                  <rect x="-28" y="-18" width="56" height="36" fill="none" stroke="var(--mq-accent)" strokeWidth="2" opacity="0.9" />
                 ) : null}
                 <TrainMarker
                   color={route?.color ?? '#888'}
@@ -590,15 +496,23 @@ export function MetroMap() {
         <div style={{ position: 'absolute', top: 10, left: 12, display: 'flex', flexDirection: 'column', gap: 4 }}>
           <span
             className="pixel-tag"
-            style={{ background: selectedRoute?.color ?? '#2d3a7d', color: '#0a0e26', borderColor: '#0a0e26' }}
+            style={{
+              background: selectedRoute?.color ?? '#ffffff',
+              color: selectedRoute ? '#ffffff' : '#1f2430',
+              boxShadow: 'var(--mq-shadow-sm)',
+              border: selectedRoute ? 'none' : '1px solid var(--mq-border)',
+            }}
           >
             {selectedRoute
               ? `${t.world} ${String(selectedRoute.worldId).padStart(2, '0')} · ${
                   language === 'zh' ? selectedRoute.nameZh : selectedRoute.nameEn
                 }`
-              : 'METRO WORLD'}
+              : 'METRO MAP'}
           </span>
-          <span className="pixel-tag" style={{ background: 'rgba(16,26,69,0.9)', color: 'var(--mq-text-dim)', borderColor: '#0a0e26' }}>
+          <span
+            className="pixel-tag"
+            style={{ background: '#ffffff', color: '#6b7280', border: '1px solid var(--mq-border)', boxShadow: 'var(--mq-shadow-sm)' }}
+          >
             {t.selectStationHint}
           </span>
         </div>

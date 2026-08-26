@@ -8,7 +8,7 @@ export function NotFound() {
     <div className="mq-404">
       <div className="mq-window mq-404__inner">
         <div className="mq-404__code">404</div>
-        <div className="mq-404__msg">WORLD NOT FOUND</div>
+        <div className="mq-404__msg">PAGE NOT FOUND</div>
         <svg width="80" height="24" viewBox="0 0 80 24" aria-hidden="true">
           <rect x="2" y="6" width="60" height="12" fill="#f2f4ff" stroke="#0a0e26" strokeWidth="2" />
           <rect x="2" y="11" width="60" height="3" fill="#ff5d73" />

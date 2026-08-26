@@ -279,7 +279,6 @@ function Dashboard() {
 
   return (
     <div className="mq-dashboard">
-      <div className="crt-overlay" aria-hidden="true" />
       <Header />
       {liveError ? (
         <div className="mq-alert-banner" role="alert">

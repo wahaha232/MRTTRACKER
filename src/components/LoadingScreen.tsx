@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------------
-// METRO QUEST — Loading Screen（提示詞四十五）
-// 黑色背景 + 像素列車從左向右跑 + 進度條 → WORLD READY!
+// METRO QUEST — Loading Screen
+// 白色背景 + 列車從左向右跑 + 進度條 → Ready!
 // ---------------------------------------------------------------------------
 import { useEffect, useState } from 'react';
 
@@ -21,12 +21,11 @@ export function LoadingScreen() {
   }, []);
 
   const ready = progress >= 100;
-  const blocks = Math.round((progress / 100) * 16);
 
   return (
     <div className="mq-loading" role="status" aria-live="polite">
       <div className="mq-loading__title">
-        {ready ? 'WORLD READY!' : 'LOADING METRO WORLD...'}
+        {ready ? 'READY!' : 'LOADING METRO MAP...'}
       </div>
       <div className="mq-loading__train" aria-hidden="true">
         <div className="mq-loading__train-track" />
@@ -49,10 +48,7 @@ export function LoadingScreen() {
       <div className="mq-loading__bar">
         <div className="mq-loading__fill" style={{ width: `${progress}%` }} />
       </div>
-      <div className="mq-loading__pct">
-        {String(progress).padStart(3, '0')}% · {'█'.repeat(blocks)}
-        {'░'.repeat(16 - blocks)}
-      </div>
+      <div className="mq-loading__pct">{String(progress).padStart(3, '0')}%</div>
     </div>
   );
 }
