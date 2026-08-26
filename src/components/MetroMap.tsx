@@ -14,8 +14,8 @@ import { TrainMarker, HEADING_ROTATION } from './TrainMarker';
 import { StationPopup } from './StationPopup';
 import type { Train, TrainPosition } from '../types';
 
-const WORLD_W = 1080;
-const WORLD_H = 850;
+const WORLD_W = 1913;
+const WORLD_H = 1614;
 
 interface ViewState {
   x: number;
