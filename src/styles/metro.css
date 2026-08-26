@@ -240,24 +240,6 @@
   cursor: pointer;
 }
 
-.mq-station__marker {
-  fill: #ffffff;
-  stroke: var(--mq-border-dark);
-  stroke-width: 2;
-}
-
-.mq-station__marker--transfer {
-  fill: var(--mq-yellow);
-}
-
-.mq-station__marker--terminal {
-  fill: var(--mq-red);
-}
-
-.mq-station:hover .mq-station__marker {
-  fill: var(--mq-accent);
-}
-
 .mq-station__label {
   font-family: var(--mq-font-zh);
   font-size: 12px;

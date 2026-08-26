@@ -454,9 +454,6 @@ export function MetroMap() {
           {STATIONS.map((station) => {
             const onSelectedRoute =
               selectedRouteId === null || station.routeIds.includes(selectedRouteId);
-            const route = ROUTES.find((r) => r.id === station.routeIds[0]);
-            const isTransfer = station.routeIds.length > 1;
-            const terminal = station.terminal === true;
             const dimmed = selectedRouteId !== null && !onSelectedRoute;
             const dx = station.x - WORLD_W / 2;
             const anchorEnd = dx >= 0 ? 'start' : 'end';
@@ -481,30 +478,14 @@ export function MetroMap() {
                   }
                 }}
               >
-                {terminal ? (
-                  <g transform={`translate(${station.x} ${station.y})`}>
-                    <rect x="-5" y="0" width="3" height="10" fill="#cfd6f0" stroke="#0a0e26" strokeWidth="1" />
-                    <rect x="-2" y="-2" width="9" height="6" fill={route?.color ?? '#fff'} stroke="#0a0e26" strokeWidth="1" />
-                    <rect className="mq-station__marker mq-station__marker--terminal" x="-4" y="6" width="8" height="8" />
-                  </g>
-                ) : isTransfer ? (
-                  <rect
-                    className="mq-station__marker mq-station__marker--transfer"
-                    x={station.x - 7}
-                    y={station.y - 7}
-                    width="14"
-                    height="14"
-                    transform={`rotate(45 ${station.x} ${station.y})`}
-                  />
-                ) : (
-                  <rect
-                    className="mq-station__marker"
-                    x={station.x - 4}
-                    y={station.y - 4}
-                    width="8"
-                    height="8"
-                  />
-                )}
+                {/* 車站標記已移除，僅保留站名與可點擊/鍵盤操作的透明命中區 */}
+                <rect
+                  x={station.x - 10}
+                  y={station.y - 10}
+                  width="20"
+                  height="20"
+                  fill="transparent"
+                />
                 <text className="mq-station__label" x={labelX} y={labelY} textAnchor={anchorEnd}>
                   {language === 'zh' ? station.nameZh : station.nameEn}
                 </text>
@@ -514,8 +495,6 @@ export function MetroMap() {
               </g>
             );
           })}
-
-          {/* 列車（提示詞十一：平滑移動 / 十七：選取列車閃爍） */}
 
           {/* 列車（提示詞十一：平滑移動 / 十七：選取列車閃爍） */}
           {trains.map((train) => {
