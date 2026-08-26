@@ -1,30 +1,25 @@
 /* ===========================================================================
-   METRO QUEST — 基礎樣式（清爽現代扁平風格：白底 / 圓角 / 柔和陰影）
+   METRO QUEST — Pixel Art 基礎樣式（提示詞四十八：image-rendering: pixelated）
    =========================================================================== */
 
 :root {
-  /* 現代扁平運輸圖配色：淺灰底 + 白色面板，取代舊有像素／木質主題 */
-  --mq-bg-deep: #e5e7eb;
-  --mq-bg-night: #eef0f3;
-  --mq-bg-dawn: #f8f9fb;
-  --mq-panel: #ffffff;
-  --mq-panel-2: #f4f5f7;
-  --mq-panel-3: #e9ebef;
-  --mq-border: #e2e5ea;
-  --mq-border-dark: #1a1d24;
-  --mq-text: #1f2430;
-  --mq-text-dim: #6b7280;
-  --mq-accent: #2563eb;
-  --mq-yellow: #f59e0b;
-  --mq-red: #ef4444;
-  --mq-green: #22c55e;
-  --mq-orange: #f97316;
-  --mq-font-en: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mq-bg-deep: #0b1035;
+  --mq-bg-night: #101a45;
+  --mq-bg-dawn: #1b2760;
+  --mq-panel: #1a2350;
+  --mq-panel-2: #232f66;
+  --mq-panel-3: #2d3a7d;
+  --mq-border: #41539f;
+  --mq-border-dark: #07091f;
+  --mq-text: #eef1ff;
+  --mq-text-dim: #9aa3d4;
+  --mq-accent: #4ef6ff;
+  --mq-yellow: #ffd23f;
+  --mq-red: #ff5d73;
+  --mq-green: #5dff8a;
+  --mq-orange: #ff9e18;
+  --mq-font-en: 'Press Start 2P', 'Courier New', monospace;
   --mq-font-zh: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
-  --mq-radius: 8px;
-  --mq-radius-sm: 5px;
-  --mq-shadow-sm: 0 1px 2px rgba(20, 24, 34, 0.06);
-  --mq-shadow-md: 0 2px 8px rgba(20, 24, 34, 0.08);
 }
 
 html,
@@ -46,49 +41,65 @@ body {
   box-sizing: border-box;
 }
 
+img,
+canvas,
+svg {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
 .pixel-font {
   font-family: var(--mq-font-en);
 }
 
-/* ---- 面板 ---- */
+/* ---- 像素面板 ---- */
 .pixel-panel {
   background: var(--mq-panel);
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius);
-  box-shadow: var(--mq-shadow-sm);
+  border: 3px solid var(--mq-border);
+  box-shadow:
+    inset 0 0 0 2px var(--mq-border-dark),
+    inset 0 0 0 3px var(--mq-panel-3),
+    4px 4px 0 0 rgba(0, 0, 0, 0.45);
+  image-rendering: pixelated;
 }
 
 .pixel-panel--inset {
-  background: var(--mq-panel-2);
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius-sm);
+  background: var(--mq-bg-night);
+  border: 3px solid var(--mq-border-dark);
+  box-shadow:
+    inset 0 0 0 2px #060a1c,
+    inset 3px 3px 0 0 rgba(0, 0, 0, 0.35),
+    inset -2px -2px 0 0 rgba(255, 255, 255, 0.06);
 }
 
-/* ---- 按鈕 ---- */
+/* ---- 像素按鈕 ---- */
 .pixel-btn {
   font-family: var(--mq-font-en);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
+  font-size: 10px;
+  letter-spacing: 1px;
   color: var(--mq-text);
-  background: var(--mq-panel);
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius-sm);
-  box-shadow: var(--mq-shadow-sm);
-  padding: 8px 12px;
+  background: var(--mq-panel-2);
+  border: 2px solid var(--mq-border);
+  box-shadow:
+    inset 0 0 0 1px var(--mq-border-dark),
+    3px 3px 0 0 rgba(0, 0, 0, 0.5);
+  padding: 8px 10px;
   cursor: pointer;
-  transition: background 120ms ease, box-shadow 120ms ease, transform 60ms ease;
+  text-transform: uppercase;
+  transition: transform 60ms steps(1), background 100ms;
   user-select: none;
 }
 
 .pixel-btn:hover:not(:disabled) {
   background: var(--mq-panel-3);
-  box-shadow: var(--mq-shadow-md);
+  color: #fff;
 }
 
 .pixel-btn:active:not(:disabled) {
-  transform: translateY(1px);
-  box-shadow: none;
+  transform: translate(2px, 2px);
+  box-shadow:
+    inset 0 0 0 1px var(--mq-border-dark),
+    1px 1px 0 0 rgba(0, 0, 0, 0.5);
 }
 
 .pixel-btn:focus-visible {
@@ -103,41 +114,40 @@ body {
 
 .pixel-btn--active {
   background: var(--mq-accent);
-  color: #ffffff;
-  border-color: var(--mq-accent);
+  color: #04103a;
+  border-color: #a9fbff;
 }
 
 .pixel-btn--danger {
-  background: #fef2f2;
-  color: var(--mq-red);
+  background: #5a1630;
   border-color: var(--mq-red);
 }
 
-/* ---- 標籤 ---- */
+/* ---- 像素標籤 ---- */
 .pixel-tag {
   font-family: var(--mq-font-en);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  padding: 4px 8px;
-  border-radius: 999px;
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 3px 6px;
+  border: 2px solid var(--mq-border-dark);
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 /* ---- 捲軸 ---- */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 }
 ::-webkit-scrollbar-track {
   background: var(--mq-bg-night);
 }
 ::-webkit-scrollbar-thumb {
-  background: #c7cbd3;
-  border-radius: 999px;
+  background: var(--mq-panel-3);
+  border: 2px solid var(--mq-bg-night);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a9aeb8;
+  background: var(--mq-border);
 }
 
 /* ---- 焦點狀態（Accessibility） ---- */
@@ -149,10 +159,10 @@ body {
 /* ---- 高對比模式 ---- */
 @media (prefers-contrast: more) {
   .pixel-panel {
-    border-color: #000000;
+    border-color: #ffffff;
   }
   .pixel-btn {
-    border-color: #000000;
+    border-color: #ffffff;
   }
 }
 
@@ -164,5 +174,9 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  .crt-overlay::before,
+  .crt-overlay::after {
+    animation: none !important;
   }
 }

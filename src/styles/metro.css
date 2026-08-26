@@ -1,6 +1,5 @@
 /* ===========================================================================
    METRO QUEST — 主版型（三欄 / 兩欄 / 單欄 + Bottom Sheet）
-   清爽現代扁平運輸圖風格：白底 / 圓角 / 柔和陰影，取代舊有像素／木質主題。
    =========================================================================== */
 
 .mq-dashboard {
@@ -8,7 +7,8 @@
   flex-direction: column;
   height: 100vh;
   width: 100vw;
-  background: var(--mq-bg-deep);
+  background:
+    linear-gradient(180deg, #070a24 0%, var(--mq-bg-deep) 30%, var(--mq-bg-night) 100%);
   position: relative;
   overflow: hidden;
 }
@@ -19,9 +19,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--mq-border);
-  background: var(--mq-panel);
+  padding: 8px 14px;
+  border-bottom: 3px solid var(--mq-border-dark);
+  background: linear-gradient(180deg, var(--mq-panel-2), var(--mq-panel));
   z-index: 10;
   flex: 0 0 auto;
 }
@@ -29,21 +29,22 @@
 .mq-header__brand {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .mq-header__title {
   font-family: var(--mq-font-en);
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 16px;
   color: var(--mq-accent);
-  letter-spacing: 0.5px;
+  text-shadow: 3px 3px 0 #06323a, 0 0 10px rgba(78, 246, 255, 0.35);
+  letter-spacing: 2px;
   margin: 0;
 }
 
 .mq-header__subtitle {
-  font-family: var(--mq-font-zh);
-  font-size: 11px;
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1px;
   color: var(--mq-text-dim);
   margin: 0;
 }
@@ -66,13 +67,12 @@
 .mq-clock__time {
   font-family: var(--mq-font-en);
   font-size: 15px;
-  font-weight: 700;
-  color: var(--mq-text);
+  color: var(--mq-yellow);
 }
 
 .mq-clock__date {
   font-family: var(--mq-font-en);
-  font-size: 10px;
+  font-size: 8px;
   color: var(--mq-text-dim);
 }
 
@@ -81,20 +81,18 @@
   align-items: center;
   gap: 6px;
   font-family: var(--mq-font-en);
-  font-size: 11px;
-  font-weight: 600;
-  color: #16a34a;
-  border: 1px solid #bbf7d0;
-  background: #f0fdf4;
-  border-radius: 999px;
-  padding: 5px 9px;
+  font-size: 9px;
+  color: var(--mq-green);
+  border: 2px solid #1d5c38;
+  background: rgba(10, 40, 24, 0.7);
+  padding: 5px 7px;
 }
 
 /* Demo 模式下使用橙色、不閃爍，明確標示目前顯示的是模擬資料而非 LIVE 資料 */
 .mq-live--demo {
-  color: #c2410c;
-  border-color: #fed7aa;
-  background: #fff7ed;
+  color: var(--mq-orange);
+  border-color: #5c3d1d;
+  background: rgba(40, 24, 10, 0.7);
 }
 
 .mq-live--demo .mq-live__dot {
@@ -103,9 +101,8 @@
 }
 
 .mq-live__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+  width: 8px;
+  height: 8px;
   background: var(--mq-green);
   animation: mq-blink 1.2s steps(2) infinite;
 }
@@ -117,17 +114,16 @@
 
 .mq-mode-tag {
   font-family: var(--mq-font-en);
-  font-size: 10px;
-  font-weight: 600;
-  padding: 5px 9px;
-  border-radius: 999px;
-  border: 1px solid var(--mq-border);
-  color: var(--mq-text-dim);
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 5px 7px;
+  border: 2px solid var(--mq-orange);
+  color: var(--mq-orange);
 }
 
 .mq-mode-tag--live {
-  border-color: #bbf7d0;
-  color: #16a34a;
+  border-color: var(--mq-green);
+  color: var(--mq-green);
 }
 
 /* ---------- Main 三欄 ---------- */
@@ -142,30 +138,28 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: var(--mq-panel);
-  border-right: 1px solid var(--mq-border);
+  background: rgba(16, 26, 69, 0.72);
+  border-right: 3px solid var(--mq-border-dark);
   overflow: hidden;
 }
 
 .mq-panel-col--right {
   border-right: none;
-  border-left: 1px solid var(--mq-border);
+  border-left: 3px solid var(--mq-border-dark);
 }
 
 .mq-panel-col__title {
   font-family: var(--mq-font-en);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  padding: 12px 14px;
-  color: var(--mq-text-dim);
-  border-bottom: 1px solid var(--mq-border);
-  background: var(--mq-panel-2);
+  font-size: 9px;
+  letter-spacing: 2px;
+  padding: 10px 12px;
+  color: var(--mq-accent);
+  border-bottom: 2px solid var(--mq-border-dark);
+  background: rgba(26, 35, 80, 0.9);
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex: 0 0 auto;
-  text-transform: uppercase;
 }
 
 .mq-panel-col__body {
@@ -180,11 +174,12 @@
 /* ---------- 中央地圖 ---------- */
 .mq-map-wrap {
   position: relative;
-  flex: 1 1 auto; /* 讓地圖填滿中央欄剩餘高度 */
+  flex: 1 1 auto; /* 讓地圖填滿中央欄剩餘高度（修復既有版面 bug） */
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: #f7f8fa;
+  background:
+    linear-gradient(180deg, #0d1238 0%, #131b4d 45%, #1a2258 78%, #0f2a3c 100%);
 }
 
 .mq-map {
@@ -200,27 +195,18 @@
   cursor: grabbing;
 }
 
-.mq-map__overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 6;
-}
-
 .mq-map__hint {
   position: absolute;
   left: 12px;
   bottom: 12px;
   font-family: var(--mq-font-en);
-  font-size: 10px;
+  font-size: 8px;
   color: var(--mq-text-dim);
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--mq-border);
-  border-radius: 999px;
-  padding: 6px 10px;
+  background: rgba(7, 9, 31, 0.72);
+  border: 2px solid var(--mq-border-dark);
+  padding: 6px 8px;
   pointer-events: none;
   z-index: 6;
-  box-shadow: var(--mq-shadow-sm);
 }
 
 .mq-map__toolbar {
@@ -234,66 +220,51 @@
 }
 
 .mq-map__zoom-btn {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   font-family: var(--mq-font-en);
-  font-size: 15px;
+  font-size: 14px;
   color: var(--mq-text);
-  background: var(--mq-panel);
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius-sm);
+  background: var(--mq-panel-2);
+  border: 2px solid var(--mq-border);
   cursor: pointer;
-  box-shadow: var(--mq-shadow-sm);
-}
-
-.mq-map__zoom-btn:hover {
-  background: var(--mq-panel-3);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
 .mq-map__zoom-btn:active {
-  transform: translateY(1px);
+  transform: translate(1px, 1px);
 }
 
-/* ---------- 車站 / 路線 SVG（清爽現代運輸圖風格） ---------- */
+/* ---------- 車站 / 路線 SVG ---------- */
 .mq-station {
   cursor: pointer;
 }
 
-/* 一般站：實心色點 */
 .mq-station__marker {
   fill: #ffffff;
-  stroke: var(--mq-text-dim);
+  stroke: var(--mq-border-dark);
   stroke-width: 2;
 }
 
-.mq-station__marker--block {
-  stroke: #ffffff;
-  stroke-width: 2;
-}
-
-/* 轉乘站：白底彩色外框（藥丸／圓形） */
 .mq-station__marker--transfer {
-  fill: #ffffff;
-  stroke-width: 2.5;
+  fill: var(--mq-yellow);
 }
 
-/* 終點站：雙圈標記 */
-.mq-station__marker--terminal-ring {
-  fill: none;
-  stroke-width: 2;
+.mq-station__marker--terminal {
+  fill: var(--mq-red);
 }
 
 .mq-station:hover .mq-station__marker {
-  filter: brightness(0.85);
+  fill: var(--mq-accent);
 }
 
 .mq-station__label {
   font-family: var(--mq-font-zh);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   fill: var(--mq-text);
   paint-order: stroke;
-  stroke: #f7f8fa;
+  stroke: #0b1035;
   stroke-width: 3px;
   stroke-linejoin: round;
   pointer-events: none;
@@ -301,33 +272,39 @@
 
 .mq-station__label--en {
   font-family: var(--mq-font-en);
-  font-size: 8px;
+  font-size: 7px;
   fill: var(--mq-text-dim);
   font-weight: 400;
 }
 
 .mq-route-path {
   fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
 }
 
-/* 白色外框，讓彩色路線在交錯處仍清楚可辨 */
-.mq-route-casing {
-  stroke: #f7f8fa;
-  stroke-width: 9;
+.mq-route-shadow {
+  stroke: rgba(0, 0, 0, 0.5);
+  stroke-width: 11;
+}
+
+.mq-route-glow {
+  stroke-width: 10;
+  opacity: 0.18;
 }
 
 .mq-route-core {
-  stroke-width: 5;
+  stroke-width: 6;
 }
 
+.mq-route--dimmed .mq-route-shadow,
+.mq-route--dimmed .mq-route-glow,
 .mq-route--dimmed .mq-route-core {
-  opacity: 0.25;
+  opacity: 0.22;
 }
 
-.mq-route--selected .mq-route-core {
-  stroke-width: 6.5;
+.mq-route--selected .mq-route-glow {
+  opacity: 0.5;
 }
 
 /* ---------- Pixel Train ---------- */
@@ -340,8 +317,8 @@
 }
 
 .mq-train__body {
-  fill: #ffffff;
-  stroke: var(--mq-border-dark);
+  fill: #f2f4ff;
+  stroke: #0a0e26;
   stroke-width: 1.5;
 }
 
@@ -350,13 +327,13 @@
 }
 
 .mq-train__window {
-  fill: #bfe3ff;
-  stroke: var(--mq-border-dark);
+  fill: #9be7ff;
+  stroke: #0a0e26;
   stroke-width: 1;
 }
 
 .mq-train__light {
-  fill: var(--mq-yellow);
+  fill: #fff6b8;
 }
 
 .mq-train--selected .mq-train__body {
@@ -364,7 +341,7 @@
 }
 
 .mq-train--delay .mq-train__stripe {
-  stroke: var(--mq-red);
+  stroke: #ff5d73;
 }
 
 /* ---------- 系統狀態列 ---------- */
@@ -372,18 +349,17 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 10px 16px;
-  border-top: 1px solid var(--mq-border);
-  background: var(--mq-panel);
+  padding: 8px 14px;
+  border-top: 3px solid var(--mq-border-dark);
+  background: linear-gradient(180deg, var(--mq-panel), #121a42);
   flex: 0 0 auto;
   flex-wrap: wrap;
 }
 
 .mq-statusbar__label {
   font-family: var(--mq-font-en);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 9px;
+  letter-spacing: 2px;
   color: var(--mq-text-dim);
 }
 
@@ -392,14 +368,14 @@
   align-items: center;
   gap: 6px;
   font-family: var(--mq-font-en);
-  font-size: 11px;
+  font-size: 9px;
   color: var(--mq-text);
 }
 
 .mq-statusbar__stat .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+  width: 9px;
+  height: 9px;
+  border: 1px solid #000;
 }
 
 .dot--green { background: var(--mq-green); }
@@ -419,29 +395,27 @@
   align-items: center;
   gap: 10px;
   padding: 9px 10px;
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius-sm);
-  background: var(--mq-panel);
+  border: 2px solid var(--mq-border-dark);
+  background: rgba(26, 35, 80, 0.85);
   cursor: pointer;
-  transition: background 120ms ease, border-color 120ms ease;
+  transition: background 100ms steps(1), transform 80ms;
 }
 
 .mq-route-item:hover {
-  background: var(--mq-panel-2);
+  background: var(--mq-panel-3);
 }
 
 .mq-route-item--active {
-  background: #eff6ff;
-  border-color: var(--mq-accent);
-  box-shadow: inset 0 0 0 1px var(--mq-accent);
+  background: rgba(45, 58, 125, 0.9);
+  box-shadow: inset 0 0 0 2px var(--mq-accent);
 }
 
 .mq-route-item__swatch {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  width: 22px;
+  height: 22px;
   flex: 0 0 auto;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 2px solid #0a0e26;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
 .mq-route-item__info {
@@ -462,7 +436,7 @@
 
 .mq-route-item__name--en {
   font-family: var(--mq-font-en);
-  font-size: 9px;
+  font-size: 7px;
   color: var(--mq-text-dim);
 }
 
@@ -474,50 +448,48 @@
 
 .mq-status-badge {
   font-family: var(--mq-font-en);
-  font-size: 9px;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 999px;
-  letter-spacing: 0.3px;
+  font-size: 7px;
+  padding: 2px 5px;
+  border: 1px solid #0a0e26;
+  letter-spacing: 0.5px;
 }
 
-.mq-status-badge--normal { background: #dcfce7; color: #15803d; }
-.mq-status-badge--delay { background: #fef3c7; color: #b45309; }
-.mq-status-badge--alert { background: #fee2e2; color: #b91c1c; }
+.mq-status-badge--normal { background: #155e33; color: var(--mq-green); }
+.mq-status-badge--delay { background: #6b4d06; color: var(--mq-yellow); }
+.mq-status-badge--alert { background: #6b1429; color: var(--mq-red); }
 
 /* ---------- World Selector ---------- */
 .mq-worldbar {
   display: flex;
   gap: 6px;
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--mq-border);
-  background: var(--mq-panel);
+  padding: 6px 10px;
+  border-bottom: 2px solid var(--mq-border-dark);
+  background: rgba(16, 26, 69, 0.9);
   overflow-x: auto;
   flex: 0 0 auto;
 }
 
 .mq-worldbar__chip {
   font-family: var(--mq-font-en);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  padding: 6px 10px;
-  border: 1px solid var(--mq-border);
-  border-radius: 999px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 6px 8px;
+  border: 2px solid var(--mq-border);
   background: var(--mq-panel);
   color: var(--mq-text);
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .mq-worldbar__chip:hover {
-  background: var(--mq-panel-2);
+  background: var(--mq-panel-3);
 }
 
 .mq-worldbar__chip--active {
   background: var(--mq-accent);
-  color: #ffffff;
-  border-color: var(--mq-accent);
+  color: #04103a;
+  border-color: #a9fbff;
 }
 
 /* ---------- 右側 Train Panel ---------- */
@@ -532,15 +504,15 @@
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  padding: 8px 10px;
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius-sm);
-  background: var(--mq-panel-2);
+  padding: 6px 8px;
+  border: 2px solid var(--mq-border-dark);
+  background: rgba(16, 26, 69, 0.85);
 }
 
 .mq-train-detail__key {
   font-family: var(--mq-font-en);
-  font-size: 10px;
+  font-size: 8px;
+  letter-spacing: 1px;
   color: var(--mq-text-dim);
 }
 
@@ -553,7 +525,7 @@
 
 .mq-train-detail__value--en {
   font-family: var(--mq-font-en);
-  font-size: 11px;
+  font-size: 9px;
 }
 
 .mq-train-detail__value--accent {
@@ -565,7 +537,7 @@
 }
 
 .mq-train-detail__value--green {
-  color: #16a34a;
+  color: var(--mq-green);
 }
 
 .mq-train-detail__header {
@@ -573,16 +545,14 @@
   align-items: center;
   gap: 10px;
   padding: 10px;
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius-sm);
-  background: var(--mq-panel-2);
+  border: 2px solid var(--mq-border-dark);
+  background: linear-gradient(180deg, var(--mq-panel-2), var(--mq-panel));
 }
 
 .mq-train-detail__id {
   font-family: var(--mq-font-en);
   font-size: 14px;
-  font-weight: 700;
-  color: var(--mq-accent);
+  color: var(--mq-yellow);
 }
 
 .mq-empty-hint {
@@ -596,20 +566,20 @@
 
 .mq-empty-hint__text {
   font-family: var(--mq-font-en);
-  font-size: 11px;
+  font-size: 9px;
   color: var(--mq-text-dim);
   line-height: 1.8;
 }
 
-/* ---------- Window / Station Popup ---------- */
+/* ---------- Pixel Window / Station Popup ---------- */
 .mq-window {
   background: var(--mq-panel);
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius);
-  box-shadow: var(--mq-shadow-md);
+  border: 3px solid var(--mq-border);
+  box-shadow:
+    inset 0 0 0 2px var(--mq-border-dark),
+    6px 6px 0 rgba(0, 0, 0, 0.55);
   min-width: 230px;
   max-width: 320px;
-  overflow: hidden;
 }
 
 .mq-window__titlebar {
@@ -617,33 +587,28 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 8px 12px;
-  background: var(--mq-panel-2);
-  border-bottom: 1px solid var(--mq-border);
+  padding: 7px 10px;
+  background: var(--mq-panel-3);
+  border-bottom: 2px solid var(--mq-border-dark);
 }
 
 .mq-window__title {
   font-family: var(--mq-font-en);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--mq-text);
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--mq-accent);
 }
 
 .mq-window__close {
   font-family: var(--mq-font-en);
-  font-size: 11px;
-  color: var(--mq-red);
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: var(--mq-radius-sm);
+  font-size: 10px;
+  color: var(--mq-text);
+  background: #5a1630;
+  border: 2px solid var(--mq-red);
   width: 22px;
   height: 22px;
   cursor: pointer;
   line-height: 1;
-}
-
-.mq-window__close:hover {
-  background: #fee2e2;
 }
 
 .mq-window__body {
@@ -658,10 +623,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 8px 10px;
-  border: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius-sm);
-  background: var(--mq-panel-2);
+  padding: 6px 8px;
+  border: 2px solid var(--mq-border-dark);
+  background: rgba(16, 26, 69, 0.85);
 }
 
 .mq-arrival-row__dir {
@@ -671,9 +635,8 @@
 
 .mq-arrival-row__time {
   font-family: var(--mq-font-en);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--mq-accent);
+  font-size: 10px;
+  color: var(--mq-yellow);
 }
 
 /* ---------- Loading Screen ---------- */
@@ -681,7 +644,7 @@
   position: fixed;
   inset: 0;
   z-index: 10000;
-  background: #ffffff;
+  background: #05060f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -691,33 +654,34 @@
 
 .mq-loading__title {
   font-family: var(--mq-font-en);
-  font-size: 15px;
-  font-weight: 800;
+  font-size: 13px;
   color: var(--mq-accent);
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .mq-loading__bar {
   width: 300px;
-  height: 10px;
-  border-radius: 999px;
-  border: 1px solid var(--mq-border);
-  background: var(--mq-panel-2);
+  height: 22px;
+  border: 3px solid var(--mq-border);
+  background: #0a0e26;
   position: relative;
-  overflow: hidden;
 }
 
 .mq-loading__fill {
   height: 100%;
-  background: var(--mq-accent);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--mq-accent) 0 10px,
+    #7ffaff 10px 12px
+  );
   width: 0%;
   transition: width 120ms steps(6);
 }
 
 .mq-loading__pct {
   font-family: var(--mq-font-en);
-  font-size: 11px;
-  color: var(--mq-text-dim);
+  font-size: 10px;
+  color: var(--mq-yellow);
 }
 
 .mq-loading__train {
@@ -732,8 +696,8 @@
   top: 34px;
   left: 0;
   right: 0;
-  height: 2px;
-  background: var(--mq-border);
+  height: 3px;
+  background: #33407a;
 }
 
 .mq-loading__train-sprite {
@@ -754,7 +718,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f7f8fa;
+  background:
+    radial-gradient(circle at 50% 30%, #182358, #0a0e26 70%);
 }
 
 .mq-404__inner {
@@ -768,14 +733,15 @@
 .mq-404__code {
   font-family: var(--mq-font-en);
   font-size: 54px;
-  font-weight: 800;
-  color: var(--mq-accent);
+  color: var(--mq-red);
+  text-shadow: 4px 4px 0 #350a14, 0 0 24px rgba(255, 93, 115, 0.5);
 }
 
 .mq-404__msg {
   font-family: var(--mq-font-en);
-  font-size: 13px;
-  color: var(--mq-text-dim);
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--mq-yellow);
 }
 
 /* ---------- 錯誤 / 連線狀態 ---------- */
@@ -783,12 +749,13 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  border: 1px solid #fecaca;
-  background: #fef2f2;
+  padding: 6px 10px;
+  border: 2px solid var(--mq-red);
+  background: rgba(107, 20, 41, 0.85);
   font-family: var(--mq-font-en);
-  font-size: 10px;
+  font-size: 8px;
   color: var(--mq-red);
+  letter-spacing: 1px;
 }
 
 /* ---------- Google AdSense 廣告位（預留） ---------- */
@@ -801,8 +768,13 @@
   gap: 7px;
   padding: 10px 12px;
   overflow: hidden;
-  background: var(--mq-panel-2);
-  border: 1px dashed var(--mq-border);
+  background:
+    repeating-linear-gradient(45deg, rgba(78, 246, 255, 0.025) 0 6px, transparent 6px 12px),
+    rgba(10, 14, 38, 0.92);
+  border: 3px dashed var(--mq-border);
+  box-shadow:
+    inset 0 0 0 2px var(--mq-border-dark),
+    inset 0 0 24px rgba(0, 0, 0, 0.35);
   color: var(--mq-text-dim);
   text-align: center;
 }
@@ -810,14 +782,14 @@
 .mq-ad--rectangle {
   flex: 0 0 auto;
   min-height: 200px;
-  border-top: 1px solid var(--mq-border);
+  border-top: 3px solid var(--mq-border-dark);
 }
 
 .mq-ad.mq-ad--banner {
   flex: 0 0 auto;
   width: 100%;
   min-height: 64px;
-  border-top: 1px solid var(--mq-border);
+  border-top: 3px solid var(--mq-border-dark);
   display: none; /* 僅 <1024px 顯示 */
 }
 
@@ -853,35 +825,50 @@
   align-items: center;
   gap: 6px;
   font-family: var(--mq-font-en);
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--mq-text-dim);
-  background: var(--mq-panel);
-  border: 1px solid var(--mq-border);
-  border-radius: 999px;
-  padding: 4px 9px;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--mq-yellow);
+  background: var(--mq-panel-2);
+  border: 2px solid var(--mq-border-dark);
+  padding: 4px 8px;
 }
 
 .mq-ad__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+  width: 7px;
+  height: 7px;
   background: var(--mq-yellow);
   animation: mq-blink 1.4s steps(2) infinite;
 }
 
 .mq-ad__text {
   font-family: var(--mq-font-en);
-  font-size: 10px;
+  font-size: 8px;
+  letter-spacing: 1.5px;
   color: var(--mq-text-dim);
   line-height: 1.7;
 }
 
 .mq-ad__dim {
   font-family: var(--mq-font-en);
-  font-size: 9px;
-  color: #c7cbd3;
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--mq-border);
 }
+
+.mq-ad__corner {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: var(--mq-border);
+  border-style: solid;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.mq-ad__corner--tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; }
+.mq-ad__corner--tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; }
+.mq-ad__corner--bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; }
+.mq-ad__corner--br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; }
 
 /* ---------- Mobile Bottom Sheet ---------- */
 .mq-bottom-sheet {
@@ -892,13 +879,12 @@
   bottom: 0;
   z-index: 40;
   background: var(--mq-panel);
-  border-top: 1px solid var(--mq-border);
-  border-radius: var(--mq-radius) var(--mq-radius) 0 0;
-  box-shadow: 0 -4px 16px rgba(20, 24, 34, 0.12);
+  border-top: 3px solid var(--mq-border);
+  box-shadow: 0 -6px 0 rgba(0, 0, 0, 0.45);
   max-height: 45vh;
   overflow-y: auto;
   transform: translateY(110%);
-  transition: transform 220ms ease;
+  transition: transform 220ms steps(5);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
@@ -908,8 +894,7 @@
 
 .mq-bottom-sheet__handle {
   width: 54px;
-  height: 5px;
-  border-radius: 999px;
+  height: 6px;
   background: var(--mq-border);
   margin: 8px auto 4px;
 }
@@ -920,14 +905,14 @@
   justify-content: space-between;
   gap: 8px;
   padding: 4px 12px 8px;
-  border-bottom: 1px solid var(--mq-border);
+  border-bottom: 2px solid var(--mq-border-dark);
 }
 
 .mq-bottom-sheet__title {
   font-family: var(--mq-font-en);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--mq-text);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--mq-accent);
 }
 
 .mq-bottom-sheet__body {
@@ -946,8 +931,11 @@
 }
 
 .mq-mobile-bar .pixel-btn {
-  font-size: 11px;
-  padding: 9px 14px;
+  font-size: 9px;
+  padding: 9px 12px;
+  box-shadow:
+    inset 0 0 0 1px var(--mq-border-dark),
+    3px 3px 0 0 rgba(0, 0, 0, 0.55);
 }
 
 /* 手機 sheet 背景遮罩 */
@@ -956,7 +944,7 @@
   inset: 0;
   z-index: 39;
   display: none;
-  background: rgba(15, 18, 25, 0.35);
+  background: rgba(3, 5, 16, 0.4);
 }
 
 /* 手機 sheet 清單 */
@@ -968,14 +956,15 @@
 
 .mq-sheet-list__hint {
   font-family: var(--mq-font-en);
-  font-size: 10px;
+  font-size: 8px;
+  letter-spacing: 1px;
   color: var(--mq-text-dim);
   text-align: center;
   line-height: 1.8;
 }
 
 /* ===========================================================================
-   Responsive Breakpoints
+   Responsive Breakpoints（提示詞二十七）
    =========================================================================== */
 @media (max-width: 1023px) {
   .mq-main {
@@ -1004,10 +993,10 @@
     display: none;
   }
   .mq-header__title {
-    font-size: 14px;
+    font-size: 12px;
   }
   .mq-clock__time {
-    font-size: 12px;
+    font-size: 11px;
   }
   .mq-statusbar__label {
     display: none;
@@ -1026,27 +1015,27 @@
   }
   .mq-statusbar {
     gap: 10px;
-    padding: 8px 10px;
+    padding: 6px 10px;
   }
   .mq-statusbar__right {
     display: none;
   }
   .mq-worldbar__chip {
-    font-size: 9px;
-    padding: 5px 8px;
+    font-size: 7px;
+    padding: 5px 6px;
   }
   .mq-header__right {
     gap: 6px;
   }
   .mq-header__right .pixel-btn {
-    padding: 6px 9px;
-    font-size: 10px;
+    padding: 6px 7px;
+    font-size: 8px;
   }
 }
 
 @media (max-width: 414px) {
   .mq-header {
-    padding: 8px 10px;
+    padding: 6px 8px;
     gap: 6px;
   }
   .mq-clock__date {
@@ -1063,10 +1052,13 @@
 
 @media (max-width: 320px) {
   .mq-header__title {
-    font-size: 12px;
+    font-size: 10px;
   }
   .mq-mobile-bar {
     bottom: 8px;
     gap: 6px;
   }
 }
+
+
+

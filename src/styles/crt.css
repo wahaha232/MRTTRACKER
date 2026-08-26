@@ -1,0 +1,53 @@
+/* ===========================================================================
+   METRO QUEST — CRT 效果（提示詞二十二：scanline / noise / glow / vignette）
+   透明度非常低，不影響閱讀。
+   =========================================================================== */
+
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 55%,
+    rgba(0, 0, 10, 0.28) 100%
+  );
+  mix-blend-mode: multiply;
+}
+
+.crt-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.05) 0px,
+    rgba(0, 0, 0, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0.5;
+}
+
+.crt-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: crt-flicker 8s steps(12) infinite;
+}
+
+@keyframes crt-flicker {
+  0%, 100% { transform: translateY(0); opacity: 0.04; }
+  50% { opacity: 0.02; }
+  51% { opacity: 0.05; }
+}
+
+/* 全螢幕微光（CRT glow） */
+.crt-glow {
+  box-shadow:
+    inset 0 0 80px rgba(78, 246, 255, 0.06),
+    inset 0 0 20px rgba(255, 210, 63, 0.03);
+}
