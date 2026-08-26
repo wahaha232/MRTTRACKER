@@ -257,7 +257,7 @@ function MobileBottomSheet({
 }
 
 function Dashboard() {
-  const { language, liveError, selectedTrainId, selectTrain } = useMetroStore();
+  const { language, liveError, selectedTrainId, selectTrain, crtOn } = useMetroStore();
   const t = dictionaries[language];
   const [mobileSheet, setMobileSheet] = useState<MobileSheetMode | null>(null);
 
@@ -279,7 +279,7 @@ function Dashboard() {
 
   return (
     <div className="mq-dashboard">
-      <div className="crt-overlay" aria-hidden="true" />
+      {crtOn ? <div className="crt-overlay" aria-hidden="true" /> : null}
       <Header />
       {liveError ? (
         <div className="mq-alert-banner" role="alert">

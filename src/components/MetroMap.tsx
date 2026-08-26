@@ -184,6 +184,7 @@ export function MetroMap() {
     selectedRouteId,
     selectedTrainId,
     selectedStationId,
+    selectRoute,
     selectTrain,
     selectStation,
     closeSelection,
@@ -199,6 +200,8 @@ export function MetroMap() {
   /** SVG viewBox 固定等於容器像素大小，讓 <g> transform 的世界座標＝畫面像素，
       避免 preserveAspectRatio 的自動縮放與 fit/zoom 邏輯的縮放互相打架導致地圖偏移。 */
   const [containerSize, setContainerSize] = useState({ width: 1, height: 1 });
+  /** 路線圖例面板（加分功能：L 快捷鍵切換） */
+  const [showLegend, setShowLegend] = useState(false);
   const viewRef = useRef<ViewState>({ x: 0, y: 0, k: 1 });
   const targetRef = useRef<ViewState>({ x: 0, y: 0, k: 1 });
   const trainsRef = useRef<Train[]>(trains);
@@ -289,6 +292,15 @@ export function MetroMap() {
   }, [selectedTrainId, positions, reduced]);
 
   // ---- 縮放 ----
+  /** 統一提交視圖：立即套用 transform。reduced-motion 模式停用 rAF 平滑迴圈，
+      若只更新 ref/state 而不 applyTransform，畫面上不會有任何變化（縮放失效）。 */
+  const commitView = (v: ViewState) => {
+    viewRef.current = v;
+    targetRef.current = v;
+    applyTransform(gRef.current, v);
+    setView(v);
+  };
+
   const zoomBy = (factor: number, anchor?: { x: number; y: number }) => {
     const rect = wrapRef.current?.getBoundingClientRect();
     const v = viewRef.current;
@@ -298,18 +310,12 @@ export function MetroMap() {
       const cy = (rect?.height ?? 0) / 2;
       const wx = (cx - v.x) / v.k;
       const wy = (cy - v.y) / v.k;
-      const nv = { x: cx - wx * nk, y: cy - wy * nk, k: nk };
-      viewRef.current = nv;
-      targetRef.current = nv;
-      setView(nv);
+      commitView({ x: cx - wx * nk, y: cy - wy * nk, k: nk });
       return;
     }
     const wx = (anchor.x - v.x) / v.k;
     const wy = (anchor.y - v.y) / v.k;
-    const nv = { x: anchor.x - wx * nk, y: anchor.y - wy * nk, k: nk };
-    viewRef.current = nv;
-    targetRef.current = nv;
-    setView(nv);
+    commitView({ x: anchor.x - wx * nk, y: anchor.y - wy * nk, k: nk });
   };
 
   /** 重設視角：回到與初始載入相同的固定可視縮放比例 */
@@ -378,23 +384,17 @@ export function MetroMap() {
       const nk = clampK((pin.k * dist) / pin.dist);
       const wx = (pin.midX - pin.x) / pin.k;
       const wy = (pin.midY - pin.y) / pin.k;
-      const nv = { x: midX - wx * nk, y: midY - wy * nk, k: nk };
-      viewRef.current = nv;
-      targetRef.current = nv;
-      setView(nv);
+      commitView({ x: midX - wx * nk, y: midY - wy * nk, k: nk });
       return;
     }
 
     if (draggingRef.current && dragStartRef.current) {
       const ds = dragStartRef.current;
-      const nv = {
+      commitView({
         x: ds.vx + (pt.x - ds.px),
         y: ds.vy + (pt.y - ds.py),
         k: viewRef.current.k,
-      };
-      viewRef.current = nv;
-      targetRef.current = nv;
-      setView(nv);
+      });
     }
   };
 
@@ -406,6 +406,54 @@ export function MetroMap() {
       pinchRef.current = null;
     }
   };
+
+  // ---- 快捷鍵（加分功能） ----
+  const handlersRef = useRef({
+    zoomIn: () => {},
+    zoomOut: () => {},
+    reset: () => {},
+    selectRoute: (_id: string | null) => {},
+    close: () => {},
+    toggleLegend: () => {},
+  });
+  handlersRef.current = {
+    zoomIn: () => zoomBy(1.25),
+    zoomOut: () => zoomBy(0.8),
+    reset: resetView,
+    selectRoute,
+    close: closeSelection,
+    toggleLegend: () => setShowLegend((v) => !v),
+  };
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      const h = handlersRef.current;
+      const key = e.key.toLowerCase();
+      if (key === '+' || key === '=') {
+        e.preventDefault();
+        h.zoomIn();
+      } else if (key === '-' || key === '_') {
+        e.preventDefault();
+        h.zoomOut();
+      } else if (key === 'r') {
+        h.reset();
+      } else if (key === 'l') {
+        h.toggleLegend();
+      } else if (key === 'escape') {
+        h.close();
+      } else if (key >= '1' && key <= '6') {
+        const route = ROUTES[Number(key) - 1];
+        h.selectRoute(route ? route.id : null);
+      } else if (key === '0') {
+        h.selectRoute(null);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   // ---- 渲染資料整理 ----
   const selectedStation = selectedStationId ? getStation(selectedStationId) : null;
@@ -565,7 +613,48 @@ export function MetroMap() {
         </div>
       </div>
 
-      <div className="mq-map__hint">DRAG / WHEEL · PINCH ZOOM</div>
+      {/* 路線圖例（加分功能） */}
+      <div className="mq-map__legend-wrap">
+        {showLegend ? (
+          <div className="mq-map__legend">
+            <div className="mq-map__legend-title">{t.legend}</div>
+            <div className="mq-map__legend-sub">{t.legendRoutes}</div>
+            {ROUTES.map((route) => {
+              const active = selectedRouteId === route.id;
+              return (
+                <button
+                  key={route.id}
+                  type="button"
+                  className={`mq-map__legend-row${active ? ' mq-map__legend-row--active' : ''}`}
+                  onClick={() => selectRoute(active ? null : route.id)}
+                >
+                  <span className="mq-map__legend-swatch" style={{ background: route.color }} aria-hidden="true" />
+                  <span className="mq-map__legend-name">
+                    {route.shortName} · {language === 'zh' ? route.nameZh : route.nameEn}
+                  </span>
+                </button>
+              );
+            })}
+            <div className="mq-map__legend-divider" />
+            <div className="mq-map__legend-note">◎ {t.legendStation}</div>
+            <div className="mq-map__legend-note">🚇 {t.legendTrain}</div>
+          </div>
+        ) : null}
+        <button
+          type="button"
+          className="pixel-btn mq-map__legend-btn"
+          onClick={() => setShowLegend((v) => !v)}
+          aria-pressed={showLegend}
+          aria-label={t.legend}
+        >
+          {t.legend}
+        </button>
+      </div>
+
+      <div className="mq-map__hint">
+        <div>DRAG / WHEEL · PINCH ZOOM</div>
+        <div>{t.keysHint}</div>
+      </div>
 
       {/* 車站彈窗 */}
       {selectedStation && stationAnchor ? (

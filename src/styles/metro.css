@@ -76,6 +76,13 @@
   color: var(--mq-text-dim);
 }
 
+.mq-clock__tz {
+  font-family: var(--mq-font-en);
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--mq-border);
+}
+
 .mq-live {
   display: inline-flex;
   align-items: center;
@@ -207,6 +214,101 @@
   padding: 6px 8px;
   pointer-events: none;
   z-index: 6;
+  line-height: 1.7;
+}
+
+/* 路線圖例（加分功能） */
+.mq-map__legend-wrap {
+  position: absolute;
+  left: 12px;
+  bottom: 46px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  z-index: 7;
+}
+
+.mq-map__legend-btn {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+}
+
+.mq-map__legend {
+  width: 208px;
+  padding: 8px;
+  background: rgba(7, 9, 31, 0.94);
+  border: 2px solid var(--mq-border);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.5);
+  color: var(--mq-text);
+}
+
+.mq-map__legend-title {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--mq-yellow);
+  margin-bottom: 4px;
+}
+
+.mq-map__legend-sub {
+  font-family: var(--mq-font-en);
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: var(--mq-text-dim);
+  margin-bottom: 4px;
+}
+
+.mq-map__legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 3px 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mq-map__legend-row:hover,
+.mq-map__legend-row--active {
+  background: rgba(78, 246, 255, 0.08);
+}
+
+.mq-map__legend-swatch {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 6px;
+  border: 2px solid #0a0e26;
+}
+
+.mq-map__legend-name {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  color: var(--mq-text);
+}
+
+.mq-map__legend-divider {
+  border-top: 2px solid var(--mq-border-dark);
+  margin: 6px 0;
+}
+
+.mq-map__legend-note {
+  font-family: var(--mq-font-zh);
+  font-size: 8px;
+  color: var(--mq-text-dim);
+  padding: 1px 4px;
+}
+
+/* 手機：圖例按鈕移到浮動控制列上方 */
+@media (max-width: 767px) {
+  .mq-map__legend-wrap {
+    left: 8px;
+    bottom: 64px;
+  }
 }
 
 .mq-map__toolbar {
@@ -439,6 +541,42 @@
 .mq-status-badge--normal { background: #155e33; color: var(--mq-green); }
 .mq-status-badge--delay { background: #6b4d06; color: var(--mq-yellow); }
 .mq-status-badge--alert { background: #6b1429; color: var(--mq-red); }
+
+/* 延誤趨勢（加分功能） */
+.mq-delay-trend {
+  margin-top: 8px;
+  border-top: 2px dashed var(--mq-border-dark);
+}
+
+.mq-delay-trend__chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 34px;
+  padding: 4px 6px;
+}
+
+.mq-delay-trend__bar {
+  flex: 1 1 0;
+  min-width: 2px;
+  border: 1px solid #0a0e26;
+  transition: height 0.6s steps(6);
+}
+
+.mq-delay-trend__legend {
+  display: flex;
+  gap: 8px;
+  padding: 2px 6px 6px;
+  font-family: var(--mq-font-en);
+  font-size: 7px;
+  color: var(--mq-text-dim);
+}
+
+.mq-delay-trend__cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
 
 /* ---------- World Selector ---------- */
 .mq-worldbar {

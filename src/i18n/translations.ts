@@ -81,6 +81,14 @@ export interface Dictionary {
   totalTrains: string;
   adLabel: string;
   adReserved: string;
+  legend: string;
+  legendRoutes: string;
+  legendStation: string;
+  legendTrain: string;
+  keysHint: string;
+  crtToggle: string;
+  timezoneLabel: string;
+  delayTrend: string;
 }
 
 const zh: Dictionary = {
@@ -160,6 +168,14 @@ const zh: Dictionary = {
   totalTrains: '總列車數',
   adLabel: 'AD · 廣告',
   adReserved: 'GOOGLE ADSENSE 廣告位置保留中',
+  legend: 'LEGEND',
+  legendRoutes: 'ROUTES',
+  legendStation: '點擊站名查看到站資訊',
+  legendTrain: '運行中的列車',
+  keysHint: 'KEYS: 1-6 ROUTE · 0 ALL · R RESET · +/- ZOOM · L LEGEND · ESC CLOSE',
+  crtToggle: 'CRT',
+  timezoneLabel: 'UTC+8',
+  delayTrend: 'DELAY TREND · 延誤趨勢',
 };
 
 const en: Dictionary = {
@@ -239,6 +255,14 @@ const en: Dictionary = {
   totalTrains: 'TOTAL TRAINS',
   adLabel: 'AD',
   adReserved: 'SPACE RESERVED FOR GOOGLE ADSENSE',
+  legend: 'LEGEND',
+  legendRoutes: 'ROUTES',
+  legendStation: 'CLICK A STATION NAME FOR ARRIVALS',
+  legendTrain: 'TRAINS IN SERVICE',
+  keysHint: 'KEYS: 1-6 ROUTE · 0 ALL · R RESET · +/- ZOOM · L LEGEND · ESC CLOSE',
+  crtToggle: 'CRT',
+  timezoneLabel: 'UTC+8',
+  delayTrend: 'DELAY TREND',
 };
 
 export const dictionaries: Record<Language, Dictionary> = { zh, en };

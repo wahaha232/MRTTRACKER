@@ -9,8 +9,17 @@ import { unlockAudio } from '../utils/sound';
 import type { Language } from '../types';
 
 export function Header() {
-  const { language, setLanguage, soundOn, toggleSound, mode, setMode, liveConfigured } =
-    useMetroStore();
+  const {
+    language,
+    setLanguage,
+    soundOn,
+    toggleSound,
+    mode,
+    setMode,
+    liveConfigured,
+    crtOn,
+    setCrtOn,
+  } = useMetroStore();
   const t = dictionaries[language];
   const [now, setNow] = useState(() => new Date());
 
@@ -66,6 +75,7 @@ export function Header() {
         <div className="mq-clock">
           <span className="mq-clock__time">{formatClock(now)}</span>
           <span className="mq-clock__date">{formatDate(now)}</span>
+          <span className="mq-clock__tz">{t.timezoneLabel}</span>
         </div>
 
         <span className={`mq-mode-tag${mode === 'live' ? ' mq-mode-tag--live' : ''}`}>
@@ -96,6 +106,17 @@ export function Header() {
           aria-label={soundOn ? t.soundOn : t.soundOff}
         >
           {soundOn ? '🔊' : '🔇'}
+        </button>
+
+        <button
+          type="button"
+          className="pixel-btn"
+          onClick={() => setCrtOn(!crtOn)}
+          aria-pressed={crtOn}
+          aria-label={t.crtToggle}
+          title={t.crtToggle}
+        >
+          🖥
         </button>
 
         <button

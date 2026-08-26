@@ -8,7 +8,7 @@ import { dictionaries } from '../i18n/translations';
 import type { TrainStatus } from '../types';
 
 export function RoutePanel() {
-  const { language, trains, selectedRouteId, selectRoute } = useMetroStore();
+  const { language, trains, selectedRouteId, selectRoute, delayHistory } = useMetroStore();
   const t = dictionaries[language];
 
   const countByRoute = (routeId: string) => trains.filter((tr) => tr.routeId === routeId).length;
@@ -91,6 +91,39 @@ export function RoutePanel() {
             </button>
           );
         })}
+
+        {/* 延誤趨勢（加分功能）：每 ~30 秒取樣一次全系統延誤比例 */}
+        {delayHistory.length > 1 ? (
+          <div className="mq-delay-trend">
+            <div className="mq-panel-col__title" style={{ padding: '6px 8px', fontSize: 8 }}>
+              {t.delayTrend}
+            </div>
+            <div className="mq-delay-trend__chart" aria-hidden="true">
+              {delayHistory.map((ratio, i) => {
+                const pct = Math.max(6, Math.round(ratio * 100));
+                return (
+                  <div
+                    key={i}
+                    className="mq-delay-trend__bar"
+                    style={{
+                      height: `${pct}%`,
+                      background: ratio > 0.5 ? 'var(--mq-red)' : ratio > 0.05 ? 'var(--mq-yellow)' : 'var(--mq-green)',
+                    }}
+                  />
+                );
+              })}
+            </div>
+            <div className="mq-delay-trend__legend">
+              <span className="mq-delay-trend__cell">● {t.normal}</span>
+              <span className="mq-delay-trend__cell" style={{ color: 'var(--mq-yellow)' }}>
+                ● {t.delay}
+              </span>
+              <span className="mq-delay-trend__cell" style={{ color: 'var(--mq-red)' }}>
+                ● {t.alert}
+              </span>
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

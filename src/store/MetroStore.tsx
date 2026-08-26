@@ -39,6 +39,10 @@ interface MetroStoreValue {
   setMode: (m: Mode) => void;
   toggleSound: () => void;
   setLanguage: (l: Language) => void;
+  crtOn: boolean;
+  setCrtOn: (v: boolean) => void;
+  /** 最近一段時間的延誤比例（0..1），每個樣本間隔約 30 秒，最多 60 筆 */
+  delayHistory: number[];
   selectRoute: (id: string | null) => void;
   selectTrain: (id: string | null) => void;
   selectStation: (id: string | null) => void;
@@ -47,10 +51,32 @@ interface MetroStoreValue {
 
 const MetroStoreContext = createContext<MetroStoreValue | null>(null);
 
+/** 使用者偏好（語系 / 模式 / 音效 / CRT）持久化到 localStorage */
+const SETTINGS_KEY = 'mq-settings-v1';
+interface PersistedSettings {
+  language?: Language;
+  mode?: Mode;
+  soundOn?: boolean;
+  crtOn?: boolean;
+}
+
+function loadSettings(): PersistedSettings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as PersistedSettings;
+    return typeof parsed === 'object' && parsed !== null ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
 export function MetroStoreProvider({ children }: { children: ReactNode }) {
-  const [mode, setModeState] = useState<Mode>('demo');
-  const [language, setLanguageState] = useState<Language>('zh');
-  const [soundOn, setSoundOn] = useState(false);
+  const saved = loadSettings();
+  const [mode, setModeState] = useState<Mode>(saved.mode === 'live' ? 'live' : 'demo');
+  const [language, setLanguageState] = useState<Language>(saved.language === 'en' ? 'en' : 'zh');
+  const [soundOn, setSoundOn] = useState(saved.soundOn === true);
+  const [crtOn, setCrtOn] = useState(saved.crtOn !== false);
   const [trains, setTrains] = useState<Train[]>(() => generateMockTrains());
   const [arrivals, setArrivals] = useState<StationArrival[]>([]);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(Date.now());
@@ -59,6 +85,20 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
   const [selectedTrainId, setSelectedTrainId] = useState<string | null>(null);
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
   const [liveError, setLiveError] = useState(false);
+  const [delayHistory, setDelayHistory] = useState<number[]>([]);
+  const lastHistoryRef = useRef(0);
+
+  // 偏好變更時寫回 localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify({ language, mode, soundOn, crtOn } satisfies PersistedSettings),
+      );
+    } catch {
+      /* 忽略（私密模式等） */
+    }
+  }, [language, mode, soundOn, crtOn]);
 
   const trainsRef = useRef<Train[]>(trains);
   trainsRef.current = trains;
@@ -87,6 +127,13 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
     (next: Train[], now: number) => {
       setTrains(next);
       setLastUpdatedAt(now);
+      // 延誤比例歷史取樣（每 ~30 秒一筆，保留最近 60 筆）
+      if (now - lastHistoryRef.current >= 30000) {
+        lastHistoryRef.current = now;
+        const total = next.length;
+        const delayed = next.filter((t) => t.status === 'delay').length;
+        setDelayHistory((h) => [...h.slice(-59), total > 0 ? delayed / total : 0]);
+      }
       for (const t of next) {
         if (t.status === 'delay' && prevStatus.current.get(t.id) !== 'delay') {
           if (soundOn) playAlert();
@@ -198,6 +245,8 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
     mode,
     language,
     soundOn,
+    crtOn,
+    delayHistory,
     trains,
     arrivals,
     systemStatus,
@@ -213,6 +262,7 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
     setMode,
     toggleSound,
     setLanguage,
+    setCrtOn,
     selectRoute,
     selectTrain,
     selectStation,
