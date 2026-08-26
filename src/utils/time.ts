@@ -10,12 +10,14 @@ function pad2(n: number): string {
 
 /** 用指定的時區取得 Date 的各時間欄位（hour/min/sec/year/month/day） */
 function partsInZone(d: Date, timeZone = 'Asia/Taipei') {
+  // hourCycle: 'h23' 明確指定 0–23，避免不同 Node/ICU 對夜半 0 點輸出
+  // 「24」或「00」的差異（hour12:false 依賴 locale 預設，跨版本不穩定）。
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone,
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit',
-    hour12: false,
+    hourCycle: 'h23',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
