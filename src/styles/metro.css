@@ -246,16 +246,52 @@
   stroke-width: 2;
 }
 
-.mq-station__marker--transfer {
-  fill: var(--mq-yellow);
+/* SMB3 問號磚（普通站） */
+.mq-station__marker--block {
+  fill: #ffb800;
+  stroke: #160d00;
+  stroke-width: 2;
 }
 
-.mq-station__marker--terminal {
-  fill: var(--mq-red);
+.mq-station__qmark {
+  font-family: var(--mq-font-en);
+  font-size: 9px;
+  font-weight: 900;
+  fill: #160d00;
+  pointer-events: none;
+}
+
+.mq-station__marker--transfer {
+  fill: #c14f2c;
+  stroke: #160d00;
+  stroke-width: 2;
+}
+
+/* SMB3 旗幟（終點站搖擺動畫） */
+.mq-flag {
+  /* fill-box 讓 transform-origin 以元素框為基準；
+     right top 即旗子左上頂點（-1 -11，旗桿頂），繞它搖擺。 */
+  transform-box: fill-box;
+  transform-origin: right top;
+  animation: mq-smb3-flag 1.4s steps(2) infinite;
+}
+
+@keyframes mq-smb3-flag {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(8deg); }
+  100% { transform: rotate(0deg); }
 }
 
 .mq-station:hover .mq-station__marker {
   fill: var(--mq-accent);
+}
+
+.mq-station:hover .mq-station__marker--block {
+  fill: var(--mq-yellow);
+}
+
+.mq-station:hover .mq-station__marker--transfer {
+  filter: brightness(1.2);
 }
 
 .mq-station__label {
@@ -288,22 +324,36 @@
   stroke-width: 11;
 }
 
-.mq-route-glow {
-  stroke-width: 10;
-  opacity: 0.18;
-}
-
 .mq-route-core {
   stroke-width: 6;
 }
 
+/* SMB3 磚塊路徑：以「方形虛線」呈現沿路徑的一排磚塊，
+   並補一層微亮縫線，營造世界地圖的 blocky 路面。 */
+.mq-route-bricks {
+  stroke-width: 6;
+  stroke-dasharray: 7 3;
+  stroke-linecap: square;
+}
+.mq-route-bricks--glow {
+  stroke-width: 3;
+  stroke-dasharray: 7 3;
+  stroke-linecap: square;
+  opacity: 0.35;
+}
+
 .mq-route--dimmed .mq-route-shadow,
-.mq-route--dimmed .mq-route-glow,
+.mq-route--dimmed .mq-route-bricks,
+.mq-route--dimmed .mq-route-bricks--glow,
 .mq-route--dimmed .mq-route-core {
   opacity: 0.22;
 }
 
-.mq-route--selected .mq-route-glow {
+.mq-route--selected .mq-route-bricks {
+  stroke-width: 7;
+}
+
+.mq-route--selected .mq-route-bricks--glow {
   opacity: 0.5;
 }
 

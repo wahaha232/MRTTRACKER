@@ -105,6 +105,29 @@ function PixelBackground() {
           <rect x={tx - 5} y={ty - 8} width="16" height="10" fill="#2f6b33" />
         </g>
       ))}
+      {/* SMB3 世界地圖灌木叢（像素半圓，純裝飾） */}
+      {[
+        [48, 630], [132, 668], [206, 640], [330, 668], [256, 772],
+        [720, 782], [862, 666], [1014, 636], [478, 700],
+      ].map(([bx, by], i) => (
+        <g key={`bush-${i}`}>
+          <rect x={bx + 4} y={by - 4} width="6" height="4" fill="#3f8a3f" />
+          <rect x={bx} y={by} width="14" height="4" fill="#2f6b33" />
+          <rect x={bx + 2} y={by - 2} width="4" height="2" fill="#7ec850" />
+          <rect x={bx + 8} y={by - 2} width="4" height="2" fill="#7ec850" />
+        </g>
+      ))}
+      {/* SMB3 山坡（遠景三角綠色丘陵） */}
+      {[
+        [10, 820, 40], [250, 835, 55], [600, 825, 30], [880, 838, 60],
+      ].map(([hx, hy, hs], i) => (
+        <polygon
+          key={`hill-${i}`}
+          points={`${hx},${hy + (hs as number)} ${hx + (hs as number) / 2},${hy} ${hx + (hs as number)},${hy + (hs as number)}`}
+          fill="#1e5a2e"
+          opacity="0.5"
+        />
+      ))}
       {/* 建築群 */}
       {[
         [20, 620], [34, 606], [50, 630], [70, 612], [86, 632],
@@ -444,8 +467,9 @@ export function MetroMap() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <path className="mq-route-path mq-route-shadow" d={rp.d} />
-                <path className="mq-route-path mq-route-glow" d={rp.d} stroke={route.color} />
                 <path className="mq-route-path mq-route-core" d={rp.d} stroke={route.color} />
+                <path className="mq-route-path mq-route-bricks--glow" d={rp.d} stroke={route.color} />
+                <path className="mq-route-path mq-route-bricks" d={rp.d} stroke={route.color} />
               </g>
             );
           })}
@@ -483,27 +507,48 @@ export function MetroMap() {
               >
                 {terminal ? (
                   <g transform={`translate(${station.x} ${station.y})`}>
-                    <rect x="-5" y="0" width="3" height="10" fill="#cfd6f0" stroke="#0a0e26" strokeWidth="1" />
-                    <rect x="-2" y="-2" width="9" height="6" fill={route?.color ?? '#fff'} stroke="#0a0e26" strokeWidth="1" />
-                    <rect className="mq-station__marker mq-station__marker--terminal" x="-4" y="6" width="8" height="8" />
+                    {/* SMB3 終點：城堡 + 旗 */}
+                    <rect x="-9" y="-2" width="18" height="8" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1.5" />
+                    <rect x="-5" y="-5" width="10" height="4" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1.5" />
+                    {/* 城垛 */}
+                    <rect x="-7" y="-2" width="2" height="2" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1" />
+                    <rect x="5" y="-2" width="2" height="2" fill="#d8cbb0" stroke="#0a0e26" strokeWidth="1" />
+                    {/* 城門 */}
+                    <rect x="-2" y="1" width="4" height="5" fill="#160d00" />
+                    {/* 旗 */}
+                    <rect className="mq-flag-pole" x="-1" y="-11" width="1.5" height="9" fill="#cfd6f0" stroke="#0a0e26" strokeWidth="0.6" />
+                    <path
+                      className="mq-flag"
+                      d="M -1 -11 L -8 -9 L -1 -7 Z"
+                      fill={route?.color ?? '#e3002c'}
+                      stroke="#0a0e26"
+                      strokeWidth="0.8"
+                      strokeLinejoin="round"
+                    />
                   </g>
                 ) : isTransfer ? (
-                  <rect
-                    className="mq-station__marker mq-station__marker--transfer"
-                    x={station.x - 7}
-                    y={station.y - 7}
-                    width="14"
-                    height="14"
-                    transform={`rotate(45 ${station.x} ${station.y})`}
-                  />
+                  <g transform={`translate(${station.x} ${station.y})`}>
+                    {/* SMB3 轉乘：大型紅磚塊 */}
+                    <rect className="mq-station__marker mq-station__marker--transfer" x="-8" y="-8" width="16" height="16" />
+                    <line x1="-8" y1="-2.6" x2="8" y2="-2.6" stroke="#160d00" strokeWidth="1.4" />
+                    <line x1="-8" y1="2.6" x2="8" y2="2.6" stroke="#160d00" strokeWidth="1.4" />
+                    <line x1="-2.6" y1="-8" x2="-2.6" y2="-2.6" stroke="#160d00" strokeWidth="1.4" />
+                    <line x1="2.6" y1="2.6" x2="2.6" y2="8" stroke="#160d00" strokeWidth="1.4" />
+                  </g>
                 ) : (
-                  <rect
-                    className="mq-station__marker"
-                    x={station.x - 4}
-                    y={station.y - 4}
-                    width="8"
-                    height="8"
-                  />
+                  <g transform={`translate(${station.x} ${station.y})`}>
+                    {/* SMB3 普通站：問號磚 */}
+                    <rect className="mq-station__marker mq-station__marker--block" x="-6" y="-6" width="12" height="12" />
+                    <text
+                      className="mq-station__qmark"
+                      x="0"
+                      y="1.5"
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                    >
+                      ?
+                    </text>
+                  </g>
                 )}
                 <text className="mq-station__label" x={labelX} y={labelY} textAnchor={anchorEnd}>
                   {language === 'zh' ? station.nameZh : station.nameEn}
