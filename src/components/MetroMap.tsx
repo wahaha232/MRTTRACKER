@@ -27,6 +27,9 @@ function clampK(k: number): number {
   return Math.min(4.5, Math.max(0.35, k));
 }
 
+/** 初始載入／重設視角固定的可視縮放比例（不再依世界地圖大小自動縮小以塞進畫面） */
+const INITIAL_SCALE = 0.55;
+
 function applyTransform(g: SVGGElement | null, view: ViewState): void {
   if (!g) return;
   g.setAttribute('transform', `translate(${view.x.toFixed(2)} ${view.y.toFixed(2)}) scale(${view.k.toFixed(4)})`);
@@ -217,10 +220,10 @@ export function MetroMap() {
     const fit = () => {
       const rect = wrapRef.current?.getBoundingClientRect();
       if (!rect || rect.width === 0 || rect.height === 0) return;
-      const k = clampK(Math.min(rect.width / WORLD_W, rect.height / WORLD_H) * 0.96);
+      const k = clampK(INITIAL_SCALE);
       const v: ViewState = {
-        x: (rect.width - WORLD_W * k) / 2,
-        y: (rect.height - WORLD_H * k) / 2,
+        x: rect.width / 2 - (WORLD_W / 2) * k,
+        y: rect.height / 2 - (WORLD_H / 2) * k,
         k,
       };
       viewRef.current = v;
@@ -305,14 +308,14 @@ export function MetroMap() {
     setView(nv);
   };
 
-  /** 重設視角：重新 fit 整個世界地圖 */
+  /** 重設視角：回到與初始載入相同的固定可視縮放比例 */
   const resetView = () => {
     const rect = wrapRef.current?.getBoundingClientRect();
     if (!rect || rect.width === 0 || rect.height === 0) return;
-    const k = clampK(Math.min(rect.width / WORLD_W, rect.height / WORLD_H) * 0.96);
+    const k = clampK(INITIAL_SCALE);
     const nv: ViewState = {
-      x: (rect.width - WORLD_W * k) / 2,
-      y: (rect.height - WORLD_H * k) / 2,
+      x: rect.width / 2 - (WORLD_W / 2) * k,
+      y: rect.height / 2 - (WORLD_H / 2) * k,
       k,
     };
     viewRef.current = nv;
