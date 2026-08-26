@@ -179,7 +179,7 @@
   min-height: 0;
   overflow: hidden;
   background:
-    linear-gradient(180deg, #0d1238 0%, #131b4d 45%, #1a2258 78%, #0f2a3c 100%);
+    linear-gradient(180deg, #f4e6c1 0%, #e9cd9c 60%, #d9b97e 100%);
 }
 
 .mq-map {
@@ -193,6 +193,13 @@
 
 .mq-map.dragging {
   cursor: grabbing;
+}
+
+.mq-map__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
 }
 
 .mq-map__hint {
@@ -246,19 +253,11 @@
   stroke-width: 2;
 }
 
-/* SMB3 問號磚（普通站） */
+/* 普通站：金色磚塊 */
 .mq-station__marker--block {
   fill: #ffb800;
   stroke: #160d00;
   stroke-width: 2;
-}
-
-.mq-station__qmark {
-  font-family: var(--mq-font-en);
-  font-size: 9px;
-  font-weight: 900;
-  fill: #160d00;
-  pointer-events: none;
 }
 
 .mq-station__marker--transfer {

@@ -59,42 +59,31 @@ function useReducedMotion(): boolean {
 function PixelBackground() {
   return (
     <g aria-hidden="true">
-      {/* 深藍天空 */}
-      <rect x="0" y="0" width={WORLD_W} height={WORLD_H} fill="#10183f" />
-      {/* 星空 */}
-      {[
-        [60, 60], [120, 130], [210, 55], [300, 110], [390, 70], [470, 140],
-        [960, 60], [1020, 120], [900, 150], [820, 60], [700, 90], [640, 160],
-        [40, 250], [150, 260], [1010, 230], [180, 170], [280, 190],
-      ].map(([sx, sy], i) => (
-        <rect key={`star-${i}`} x={sx} y={sy} width="3" height="3" fill="#dfe7ff" opacity="0.7" />
-      ))}
-      {/* 月亮 */}
-      <rect x="985" y="52" width="26" height="26" fill="#ffd23f" />
-      <rect x="992" y="58" width="12" height="12" fill="#10183f" />
+      {/* SMB3 世界地圖天空：米黃/日間色調 */}
+      <rect x="0" y="0" width={WORLD_W} height={WORLD_H} fill="#e9cd9c" />
       {/* 雲朵 */}
-      <rect x="80" y="90" width="60" height="10" fill="#e8ecff" opacity="0.8" />
-      <rect x="92" y="82" width="34" height="8" fill="#e8ecff" opacity="0.8" />
-      <rect x="780" y="110" width="70" height="10" fill="#e8ecff" opacity="0.6" />
-      <rect x="795" y="100" width="40" height="10" fill="#e8ecff" opacity="0.6" />
-      <rect x="360" y="70" width="50" height="8" fill="#e8ecff" opacity="0.45" />
-      {/* 遠山 */}
+      <rect x="80" y="90" width="60" height="10" fill="#fff8ea" opacity="0.9" />
+      <rect x="92" y="82" width="34" height="8" fill="#fff8ea" opacity="0.9" />
+      <rect x="780" y="110" width="70" height="10" fill="#fff8ea" opacity="0.75" />
+      <rect x="795" y="100" width="40" height="10" fill="#fff8ea" opacity="0.75" />
+      <rect x="360" y="70" width="50" height="8" fill="#fff8ea" opacity="0.6" />
+      {/* 遠山：暖棕色丘陵 */}
       {[
         [0, 470, 30], [30, 450, 34], [60, 480, 26], [90, 455, 30],
         [960, 480, 30], [990, 455, 34], [1020, 470, 26], [1050, 450, 30],
       ].map(([mx, my, mh], i) => (
-        <polygon key={`mt-${i}`} points={`${mx},${my + (mh as number) * 2} ${mx + (mh as number) / 2},${my} ${mx + (mh as number)},${my + (mh as number) * 2}`} fill="#0d1440" />
+        <polygon key={`mt-${i}`} points={`${mx},${my + (mh as number) * 2} ${mx + (mh as number) / 2},${my} ${mx + (mh as number)},${my + (mh as number) * 2}`} fill="#c9955c" stroke="#96683a" strokeWidth="1" />
       ))}
-      {/* 水 */}
-      <rect x="0" y="790" width="230" height="60" fill="#0e2f56" />
-      <rect x="60" y="798" width="14" height="4" fill="#1b5a86" />
-      <rect x="110" y="812" width="14" height="4" fill="#1b5a86" />
-      <rect x="170" y="800" width="10" height="3" fill="#1b5a86" />
-      <rect x="240" y="805" width="16" height="4" fill="#0e2f56" />
-      <rect x="290" y="818" width="16" height="4" fill="#1b5a86" />
-      <rect x="980" y="770" width="100" height="80" fill="#0e2f56" />
-      <rect x="1000" y="790" width="12" height="4" fill="#1b5a86" />
-      <rect x="1040" y="805" width="12" height="4" fill="#1b5a86" />
+      {/* 水：晴天藍 */}
+      <rect x="0" y="790" width="230" height="60" fill="#5aa9e6" stroke="#2f6db3" strokeWidth="1" />
+      <rect x="60" y="798" width="14" height="4" fill="#8ccbf5" />
+      <rect x="110" y="812" width="14" height="4" fill="#8ccbf5" />
+      <rect x="170" y="800" width="10" height="3" fill="#8ccbf5" />
+      <rect x="240" y="805" width="16" height="4" fill="#5aa9e6" />
+      <rect x="290" y="818" width="16" height="4" fill="#8ccbf5" />
+      <rect x="980" y="770" width="100" height="80" fill="#5aa9e6" stroke="#2f6db3" strokeWidth="1" />
+      <rect x="1000" y="790" width="12" height="4" fill="#8ccbf5" />
+      <rect x="1040" y="805" width="12" height="4" fill="#8ccbf5" />
       {/* 樹木 */}
       {[
         [30, 690], [70, 705], [115, 690], [160, 720], [1000, 700], [1030, 720],
@@ -128,18 +117,18 @@ function PixelBackground() {
           opacity="0.5"
         />
       ))}
-      {/* 建築群 */}
+      {/* 遠景石塔群（日間石磚色，取代原本的夜間發光高樓） */}
       {[
         [20, 620], [34, 606], [50, 630], [70, 612], [86, 632],
         [930, 610], [948, 596], [964, 620], [982, 604], [998, 628],
       ].map(([bx, by], i) => (
-        <rect key={`bld-${i}`} x={bx} y={by} width="10" height={770 - (by as number)} fill="#1b2653" stroke="#26346b" strokeWidth="1" />
+        <rect key={`bld-${i}`} x={bx} y={by} width="10" height={770 - (by as number)} fill="#8a6d4a" stroke="#5c4527" strokeWidth="1" />
       ))}
       {[30, 44, 60, 74, 88].map((ox, i) => (
-        <rect key={`win-${i}`} x={ox} y="630" width="3" height="3" fill="#ffd23f" opacity="0.7" />
+        <rect key={`win-${i}`} x={ox} y="630" width="3" height="3" fill="#fbf2df" opacity="0.55" />
       ))}
       {[940, 956, 972, 988, 1004].map((ox, i) => (
-        <rect key={`win2-${i}`} x={ox} y="612" width="3" height="3" fill="#4ef6ff" opacity="0.7" />
+        <rect key={`win2-${i}`} x={ox} y="612" width="3" height="3" fill="#fbf2df" opacity="0.55" />
       ))}
     </g>
   );
@@ -537,17 +526,9 @@ export function MetroMap() {
                   </g>
                 ) : (
                   <g transform={`translate(${station.x} ${station.y})`}>
-                    {/* SMB3 普通站：問號磚 */}
+                    {/* 普通站：金色磚塊 + 中央凸起裝飾（通用圖案，非特定商標符號） */}
                     <rect className="mq-station__marker mq-station__marker--block" x="-6" y="-6" width="12" height="12" />
-                    <text
-                      className="mq-station__qmark"
-                      x="0"
-                      y="1.5"
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                    >
-                      ?
-                    </text>
+                    <rect x="-2" y="-2" width="4" height="4" fill="#fff3c4" opacity="0.9" />
                   </g>
                 )}
                 <text className="mq-station__label" x={labelX} y={labelY} textAnchor={anchorEnd}>
@@ -559,8 +540,6 @@ export function MetroMap() {
               </g>
             );
           })}
-
-          {/* 列車（提示詞十一：平滑移動 / 十七：選取列車閃爍） */}
 
           {/* 列車（提示詞十一：平滑移動 / 十七：選取列車閃爍） */}
           {trains.map((train) => {
