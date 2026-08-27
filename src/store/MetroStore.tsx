@@ -16,7 +16,7 @@ import {
 import type { Language, Mode, StationArrival, SystemStatus, Train } from '../types';
 import { generateMockTrains, tickDemoTrains } from '../services/mockMetroApi';
 import { fetchLiveArrivals, isLiveConfigured, getLiveConfig } from '../services/metroApi';
-import { adaptApiArrivals } from '../services/dataAdapter';
+import { adaptApiArrivals, adaptApiArrivalsToTrains } from '../services/dataAdapter';
 import { playAlert, playArrival } from '../utils/sound';
 
 interface MetroStoreValue {
@@ -161,24 +161,25 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
       return () => window.clearInterval(timer);
     }
 
-    // Live mode：TDX 只提供車站到站看板，沒有列車即時位置，
-    // 地圖上不畫移動的列車圖示，改由點擊車站顯示到站看板。
+    // Live mode：TDX 只提供車站到站看板，沒有列車即時位置。地圖上的列車圖示
+    // 是從「每個方向最快進站」的看板資料反推「近似位置」，不是精確 GPS；
+    // 車站彈窗顯示的到站看板才是完整、未經推算的原始資料。
     if (!liveConfigured) {
       setLiveError(true);
       setModeState('demo');
       return;
     }
 
-    setTrains([]);
     let cancelled = false;
     const load = async () => {
       try {
         const raw = await fetchLiveArrivals();
         if (cancelled) return;
         const adapted = adaptApiArrivals(raw);
+        const approxTrains = adaptApiArrivalsToTrains(raw);
         setLiveError(false);
         setArrivals(adapted);
-        setLastUpdatedAt(Date.now());
+        applyTrains(approxTrains, Date.now());
       } catch {
         if (cancelled) return;
         setLiveError(true);
