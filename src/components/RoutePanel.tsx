@@ -5,7 +5,6 @@
 import { useMetroStore } from '../store/MetroStore';
 import { ROUTES } from '../data/routes';
 import { dictionaries } from '../i18n/translations';
-import type { TrainStatus } from '../types';
 
 export function RoutePanel() {
   const { language, trains, selectedRouteId, selectRoute, delayHistory } = useMetroStore();
@@ -14,12 +13,6 @@ export function RoutePanel() {
   const countByRoute = (routeId: string) => trains.filter((tr) => tr.routeId === routeId).length;
   const delayByRoute = (routeId: string) =>
     trains.filter((tr) => tr.routeId === routeId && tr.status === 'delay').length;
-
-  const statusOf = (routeId: string): TrainStatus => {
-    const delayed = delayByRoute(routeId);
-    if (delayed >= 4) return 'delay';
-    return 'normal';
-  };
 
   return (
     <div className="mq-panel-col mq-panel-col--left">
@@ -36,7 +29,7 @@ export function RoutePanel() {
             aria-hidden="true"
           />
           <span className="mq-route-item__info">
-            <span className="mq-route-item__name">{language === 'zh' ? t.allRoutes : t.allRoutes}</span>
+            <span className="mq-route-item__name">{t.allRoutes}</span>
             <span className="mq-route-item__name--en">
               {trains.length} {t.trains}
             </span>
@@ -44,7 +37,6 @@ export function RoutePanel() {
         </button>
 
         {ROUTES.map((route) => {
-          const status = statusOf(route.id);
           const count = countByRoute(route.id);
           const delay = delayByRoute(route.id);
           const active = selectedRouteId === route.id;
@@ -79,13 +71,6 @@ export function RoutePanel() {
                   ) : (
                     <span className="mq-status-badge mq-status-badge--normal">{t.normal}</span>
                   )}
-                  <span
-                    className={`mq-status-badge ${
-                      status === 'delay' ? 'mq-status-badge--delay' : 'mq-status-badge--normal'
-                    }`}
-                  >
-                    {status === 'delay' ? t.delay : t.normal}
-                  </span>
                 </span>
               </span>
             </button>
@@ -100,7 +85,7 @@ export function RoutePanel() {
             </div>
             <div className="mq-delay-trend__chart" aria-hidden="true">
               {delayHistory.map((ratio, i) => {
-                const pct = Math.max(6, Math.round(ratio * 100));
+                const pct = ratio > 0 ? Math.max(6, Math.round(ratio * 100)) : 2;
                 return (
                   <div
                     key={i}

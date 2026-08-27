@@ -62,8 +62,12 @@ function useReducedMotion(): boolean {
 function PixelBackground() {
   return (
     <g aria-hidden="true">
-      {/* 深藍天空 */}
+      {/* 深藍天空：直接鋪滿目前的世界地圖大小 */}
       <rect x="0" y="0" width={WORLD_W} height={WORLD_H} fill="#10183f" />
+      {/* 以下裝飾座標是校準給舊版 1080x850 畫布的；世界地圖重排後放大到
+          {WORLD_W}x{WORLD_H}，故用等比例縮放讓裝飾物鋪滿整個新畫布，
+          不再只擠在左上一小塊。 */}
+      <g transform={`scale(${WORLD_W / 1080} ${WORLD_H / 850})`}>
       {/* 星空 */}
       {[
         [60, 60], [120, 130], [210, 55], [300, 110], [390, 70], [470, 140],
@@ -121,6 +125,7 @@ function PixelBackground() {
       {[940, 956, 972, 988, 1004].map((ox, i) => (
         <rect key={`win2-${i}`} x={ox} y="612" width="3" height="3" fill="#4ef6ff" opacity="0.7" />
       ))}
+      </g>
     </g>
   );
 }
@@ -428,8 +433,12 @@ export function MetroMap() {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const tag = (e.target as HTMLElement | null)?.tagName;
+      const targetEl = e.target as HTMLElement | null;
+      const tag = targetEl?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      // 車站本身有 focus 時（Tab 移入、role="button"）不要讓全域快捷鍵搶走按鍵，
+      // 否則使用者對著車站按 Enter/Space 以外的鍵（如數字、R、L）會被誤觸發。
+      if (targetEl?.closest('.mq-station')) return;
       const h = handlersRef.current;
       const key = e.key.toLowerCase();
       if (key === '+' || key === '=') {
