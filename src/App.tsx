@@ -9,6 +9,7 @@ import { Header } from './components/Header';
 import { RoutePanel } from './components/RoutePanel';
 import { WorldSelector } from './components/WorldSelector';
 import { MetroMap } from './components/MetroMap';
+import { RouteStripView } from './components/RouteStripView';
 import { TrainPanel } from './components/TrainPanel';
 import { StatusBar } from './components/StatusBar';
 import { LoadingScreen } from './components/LoadingScreen';
@@ -257,7 +258,7 @@ function MobileBottomSheet({
 }
 
 function Dashboard() {
-  const { language, liveError, selectedTrainId, selectTrain, crtOn } = useMetroStore();
+  const { language, liveError, selectedTrainId, selectTrain, crtOn, viewMode } = useMetroStore();
   const t = dictionaries[language];
   const [mobileSheet, setMobileSheet] = useState<MobileSheetMode | null>(null);
 
@@ -298,7 +299,7 @@ function Dashboard() {
           }}
         >
           <WorldSelector />
-          <MetroMap />
+          {viewMode === 'strip' ? <RouteStripView /> : <MetroMap />}
           {sheetOpen ? (
             <div
               className="mq-sheet-backdrop mq-sheet-backdrop--open"

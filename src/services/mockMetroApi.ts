@@ -50,6 +50,14 @@ function routePaths(route: Route): string[][] {
   return [route.stations, ...route.branches.map((b) => b.stations)];
 }
 
+/** 依方向推算本次行駛的終點站（該路徑的起點或終點） */
+function destinationStationIdFor(route: Route, stationId: string, dir: 1 | -1): string | undefined {
+  for (const p of routePaths(route)) {
+    if (p.includes(stationId)) return dir === 1 ? p[p.length - 1] : p[0];
+  }
+  return undefined;
+}
+
 /** 列車抵達 nextStation 後，計算新的 current/next 配對與方向 */
 export function nextPair(route: Route, train: Train): { current: string; next: string; dir: 1 | -1 } {
   const paths = routePaths(route);
@@ -104,6 +112,7 @@ export function generateMockTrains(): Train[] {
         delaySeconds: 0,
         direction: dir,
         updatedAt: now,
+        destinationStationId: destinationStationIdFor(route, toId, dir),
       });
     }
   }
@@ -134,6 +143,7 @@ export function tickDemoTrains(trains: Train[], timeNow: number): Train[] {
       delaySeconds: delay,
       status: delay > 0 ? 'delay' : 'normal',
       updatedAt: timeNow,
+      destinationStationId: destinationStationIdFor(route, pair.next, pair.dir),
     };
   });
 }

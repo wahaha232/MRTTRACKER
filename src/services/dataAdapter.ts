@@ -81,6 +81,7 @@ export function adaptApiArrivalsToTrains(raw: ApiArrivalRaw[]): Train[] {
     currentStationId: string;
     nextStationId: string;
     remainingSeconds: number;
+    destinationStationId: string;
   }
   const bestByKey = new Map<string, Candidate>();
 
@@ -110,7 +111,14 @@ export function adaptApiArrivalsToTrains(raw: ApiArrivalRaw[]): Train[] {
     const key = `${routeId}-${direction}`;
     const existing = bestByKey.get(key);
     if (!existing || remainingSeconds < existing.remainingSeconds) {
-      bestByKey.set(key, { routeId, direction, currentStationId, nextStationId: stationId, remainingSeconds });
+      bestByKey.set(key, {
+        routeId,
+        direction,
+        currentStationId,
+        nextStationId: stationId,
+        remainingSeconds,
+        destinationStationId: destinationId,
+      });
     }
   }
 
@@ -128,6 +136,7 @@ export function adaptApiArrivalsToTrains(raw: ApiArrivalRaw[]): Train[] {
       delaySeconds: 0,
       direction: c.direction,
       updatedAt: now,
+      destinationStationId: c.destinationStationId,
     });
   }
   return trains;

@@ -7,7 +7,7 @@ import { ROUTES } from '../data/routes';
 import { dictionaries } from '../i18n/translations';
 
 export function WorldSelector() {
-  const { language, selectedRouteId, selectRoute } = useMetroStore();
+  const { language, selectedRouteId, selectRoute, viewMode, setViewMode } = useMetroStore();
   const t = dictionaries[language];
 
   return (
@@ -33,6 +33,24 @@ export function WorldSelector() {
           {t.world} {String(route.worldId).padStart(2, '0')} · {route.shortName}
         </button>
       ))}
+      <div className="mq-worldbar__viewtoggle" role="group" aria-label={`${t.mapView} / ${t.stripView}`}>
+        <button
+          type="button"
+          aria-pressed={viewMode === 'map'}
+          className={`mq-worldbar__chip${viewMode === 'map' ? ' mq-worldbar__chip--active' : ''}`}
+          onClick={() => setViewMode('map')}
+        >
+          {t.mapView}
+        </button>
+        <button
+          type="button"
+          aria-pressed={viewMode === 'strip'}
+          className={`mq-worldbar__chip${viewMode === 'strip' ? ' mq-worldbar__chip--active' : ''}`}
+          onClick={() => setViewMode('strip')}
+        >
+          {t.stripView}
+        </button>
+      </div>
     </div>
   );
 }

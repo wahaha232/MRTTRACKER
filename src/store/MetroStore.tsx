@@ -13,7 +13,7 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { Language, Mode, StationArrival, SystemStatus, Train } from '../types';
+import type { Language, Mode, StationArrival, SystemStatus, Train, ViewMode } from '../types';
 import { generateMockTrains, tickDemoTrains } from '../services/mockMetroApi';
 import { fetchLiveArrivals, isLiveConfigured, getLiveConfig } from '../services/metroApi';
 import { adaptApiArrivals, adaptApiArrivalsToTrains } from '../services/dataAdapter';
@@ -21,6 +21,8 @@ import { playAlert, playArrival } from '../utils/sound';
 
 interface MetroStoreValue {
   mode: Mode;
+  viewMode: ViewMode;
+  setViewMode: (v: ViewMode) => void;
   language: Language;
   soundOn: boolean;
   trains: Train[];
@@ -58,6 +60,7 @@ interface PersistedSettings {
   mode?: Mode;
   soundOn?: boolean;
   crtOn?: boolean;
+  viewMode?: ViewMode;
 }
 
 function loadSettings(): PersistedSettings {
@@ -74,6 +77,7 @@ function loadSettings(): PersistedSettings {
 export function MetroStoreProvider({ children }: { children: ReactNode }) {
   const saved = loadSettings();
   const [mode, setModeState] = useState<Mode>(saved.mode === 'live' ? 'live' : 'demo');
+  const [viewMode, setViewMode] = useState<ViewMode>(saved.viewMode === 'strip' ? 'strip' : 'map');
   const [language, setLanguageState] = useState<Language>(saved.language === 'en' ? 'en' : 'zh');
   const [soundOn, setSoundOn] = useState(saved.soundOn === true);
   const [crtOn, setCrtOn] = useState(saved.crtOn !== false);
@@ -93,12 +97,12 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(
         SETTINGS_KEY,
-        JSON.stringify({ language, mode, soundOn, crtOn } satisfies PersistedSettings),
+        JSON.stringify({ language, mode, soundOn, crtOn, viewMode } satisfies PersistedSettings),
       );
     } catch {
       /* 忽略（私密模式等） */
     }
-  }, [language, mode, soundOn, crtOn]);
+  }, [language, mode, soundOn, crtOn, viewMode]);
 
   const trainsRef = useRef<Train[]>(trains);
   trainsRef.current = trains;
@@ -244,6 +248,8 @@ export function MetroStoreProvider({ children }: { children: ReactNode }) {
 
   const value: MetroStoreValue = {
     mode,
+    viewMode,
+    setViewMode,
     language,
     soundOn,
     crtOn,

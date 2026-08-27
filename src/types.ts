@@ -5,6 +5,8 @@
 
 export type Language = 'zh' | 'en';
 export type Mode = 'demo' | 'live';
+/** map = 總覽地圖，strip = 單一路線直線圖（同時列出全部路線） */
+export type ViewMode = 'map' | 'strip';
 export type SystemStatus = 'normal' | 'delay' | 'alert';
 export type TrainStatus = 'normal' | 'delay';
 export type Heading = 'E' | 'W' | 'N' | 'S' | 'NE' | 'NW' | 'SE' | 'SW';
@@ -70,6 +72,8 @@ export interface Train {
   direction: 1 | -1;
   /** 上次引擎更新時間（performance.now / Date.now） */
   updatedAt: number;
+  /** 本次行駛的終點站 id（Live Mode 為 TDX 回傳值；Demo Mode 為路徑終點推算值） */
+  destinationStationId?: string;
 }
 
 export interface TrainPosition {

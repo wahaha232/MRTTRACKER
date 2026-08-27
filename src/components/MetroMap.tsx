@@ -12,6 +12,7 @@ import { ALL_ROUTE_PATHS, isTerminalFor } from '../utils/routeGeometry';
 import { interpolatedProgress, progressForTrain, calculateTrainPosition } from '../utils/calculateTrainPosition';
 import { TrainMarker, HEADING_ROTATION } from './TrainMarker';
 import { StationPopup } from './StationPopup';
+import { useReducedMotion } from '../utils/useReducedMotion';
 import type { Train, TrainPosition } from '../types';
 
 const WORLD_W = 1913;
@@ -38,21 +39,6 @@ function applyTransform(g: SVGGElement | null, view: ViewState): void {
 /** 將世界座標轉為容器像素座標 */
 function worldToScreen(p: { x: number; y: number }, view: ViewState) {
   return { x: p.x * view.k + view.x, y: p.y * view.k + view.y };
-}
-
-function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState<boolean>(() =>
-    typeof window !== 'undefined'
-      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      : false,
-  );
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
-  return reduced;
 }
 
 // ---------------------------------------------------------------------------

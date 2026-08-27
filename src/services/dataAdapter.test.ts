@@ -55,6 +55,7 @@ describe('adaptApiArrivalsToTrains（用到站看板反推近似列車位置）'
     expect(train!.currentStationId).toBe('r-jiantan');
     expect(train!.direction).toBe(1);
     expect(train!.remainingSeconds).toBe(40);
+    expect(train!.destinationStationId).toBe('r-xiangshan');
   });
 
   it('進站站是該方向的起點站（無「上一站」）時整筆略過', () => {

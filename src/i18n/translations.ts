@@ -89,6 +89,10 @@ export interface Dictionary {
   crtToggle: string;
   timezoneLabel: string;
   delayTrend: string;
+  mapView: string;
+  stripView: string;
+  destinationLabel: string;
+  transferTo: string;
 }
 
 const zh: Dictionary = {
@@ -176,6 +180,10 @@ const zh: Dictionary = {
   crtToggle: 'CRT',
   timezoneLabel: 'UTC+8',
   delayTrend: 'DELAY TREND · 延誤趨勢',
+  mapView: '總覽地圖',
+  stripView: '路線直線圖',
+  destinationLabel: '終點站',
+  transferTo: '可轉乘',
 };
 
 const en: Dictionary = {
@@ -263,6 +271,10 @@ const en: Dictionary = {
   crtToggle: 'CRT',
   timezoneLabel: 'UTC+8',
   delayTrend: 'DELAY TREND',
+  mapView: 'MAP VIEW',
+  stripView: 'LINE VIEW',
+  destinationLabel: 'DEST',
+  transferTo: 'TRANSFER',
 };
 
 export const dictionaries: Record<Language, Dictionary> = { zh, en };

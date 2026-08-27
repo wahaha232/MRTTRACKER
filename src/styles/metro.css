@@ -1180,5 +1180,204 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   路線直線圖（RouteStripView）：地圖 / 直線圖切換鈕 + 每條路線一排的
+   拉直站點條狀圖，轉乘站用色點徽章標示。
+--------------------------------------------------------------------------- */
+.mq-worldbar__viewtoggle {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  padding-left: 6px;
+  flex: 0 0 auto;
+}
+
+.mq-strip-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: linear-gradient(180deg, #0d1238 0%, #131b4d 45%, #1a2258 78%, #0f2a3c 100%);
+}
+
+.mq-strip-wrap__hint {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--mq-text-dim);
+}
+
+.mq-strip-row {
+  position: relative;
+  transition: opacity 120ms;
+}
+
+.mq-strip-row--dimmed {
+  opacity: 0.35;
+}
+
+.mq-strip-row__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 2px 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mq-strip-row__swatch {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  border: 2px solid var(--mq-border-dark);
+}
+
+.mq-strip-row__name {
+  font-family: var(--mq-font-zh);
+  font-size: 13px;
+  color: var(--mq-text);
+  flex: 1 1 auto;
+}
+
+.mq-strip-row__scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 2px solid var(--mq-border-dark);
+  background: rgba(10, 14, 38, 0.55);
+}
+
+.mq-strip-row__track {
+  position: relative;
+  min-width: 100%;
+}
+
+.mq-strip-row__line {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 56px;
+  height: 3px;
+}
+
+.mq-strip-station {
+  position: absolute;
+  top: 44px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 58px;
+}
+
+.mq-strip-station__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mq-strip-station__dot--transfer {
+  width: 14px;
+  height: 14px;
+  background: var(--mq-panel);
+  border: 3px solid var(--mq-border);
+}
+
+.mq-strip-station__name {
+  font-family: var(--mq-font-zh);
+  font-size: 9px;
+  color: var(--mq-text-dim);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.mq-strip-station__transfers {
+  display: flex;
+  gap: 2px;
+}
+
+.mq-strip-station__transfer-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.mq-strip-train {
+  position: absolute;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  width: 60px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mq-strip-train--fwd {
+  top: 2px;
+}
+
+.mq-strip-train--rev {
+  top: 96px;
+  flex-direction: column-reverse;
+}
+
+.mq-strip-train--selected .mq-strip-train__icon {
+  box-shadow: 0 0 0 2px var(--mq-accent);
+}
+
+.mq-strip-train__dest {
+  font-family: var(--mq-font-zh);
+  font-size: 8px;
+  color: var(--mq-text-dim);
+  text-align: center;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60px;
+}
+
+.mq-strip-train__icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #0a0e26;
+  border: 2px solid var(--mq-border-dark);
+}
+
+.mq-strip-train__eta {
+  font-family: var(--mq-font-en);
+  font-size: 8px;
+  color: var(--mq-yellow);
+}
+
+@media (max-width: 720px) {
+  .mq-strip-wrap {
+    padding: 8px 8px 16px;
+  }
+  .mq-worldbar__viewtoggle {
+    margin-left: 0;
+  }
+}
+
 
 
